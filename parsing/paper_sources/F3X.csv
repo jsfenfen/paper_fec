@@ -1,0 +1,125 @@
+canonical,^P3.1|P3.0|P2.6,,^P2.4,,^P2.3,,^P2.2|P1.0,
+form_type,1,1-F3X + 3 FORM TYPE,1,1-F3X + 3 FORM TYPE,1,F3X + 3 FORM TYPE,1,1-F3X + 3 FORM TYPE
+filer_committee_id_number,2,2-2 FILER FEC COMMITTEE ID,2,2-2 FILER FEC COMMITTEE ID,2,2 FILER FEC COMMITTEE ID,2,2-2 FILER FEC COMMITTEE ID
+committee_name,3,3-1 COMMITTEE NAME,3,3-1 COMMITTEE NAME,3,1 COMMITTEE NAME,3,3-1 COMMITTEE NAME
+change_of_address,4,4-1 CHANGE OF ADDRESS,4,4-1 CHANGE OF ADDRESS,4,1 CHANGE OF ADDRESS,4,4-1 CHANGE OF ADDRESS
+street_1,5,5-1 STREET 1,5,5-1 STREET 1,5,1 STREET 1,5,5-1 STREET 1
+street_2,6,6-1 STREET 2,6,6-1 STREET 2,6,1 STREET 2,6,6-1 STREET 2
+city,7,7-1 CITY,7,7-1 CITY,7,1 CITY,7,7-1 CITY
+state,8,8-1 STATE,8,8-1 STATE,8,1 STATE,8,8-1 STATE
+zip,9,9-1 ZIP,9,9-1 ZIP,9,1 ZIP,9,9-1 ZIP
+report_code,10,10-4 (a) => (d) REPORT CODE,10,10-4 (a) => (d) REPORT CODE,10,4 (a) => (d) REPORT CODE,10,10-4 (a) => (d) REPORT CODE
+date_of_election,11,11-4 (c) or (d) DATE OF ELECTION,11,11-4 (c) or (d) DATE OF ELECTION,11,4 (c) or (d) DATE OF ELECTION,11,11-4 (c) or (d) DATE OF ELECTION
+state_of_election,12,12-4 (c) or (d) STATE OF ELECTION,12,12-4 (c) or (d) STATE OF ELECTION,12,4 (c) or (d) STATE OF ELECTION,12,12-4 (c) or (d) STATE OF ELECTION
+coverage_from_date,13,13-5 COVERAGE FROM DATE,13,13-5 COVERAGE FROM DATE,13,5 COVERAGE FROM DATE,13,13-5 COVERAGE FROM DATE
+coverage_through_date,14,14-5 COVERAGE THROUGH DATE,14,14-5 COVERAGE THROUGH DATE,14,5 COVERAGE THROUGH DATE,14,14-5 COVERAGE THROUGH DATE
+treasurer_last_name,15,15-Botm pg 1 TREAS LAST NAME,15,15-Botm pg 1 TREAS LAST NAME,15,Botm pg 1 TREAS LAST NAME,15,15-Botm pg 1 TREAS LAST NAME
+treasurer_first_name,16,16-Botm pg 1 TREAS FIRST NAME,16,16-Botm pg 1 TREAS FIRST NAME,16,Botm pg 1 TREAS FIRST NAME,16,16-Botm pg 1 TREAS FIRST NAME
+treasurer_middle_name,17,17-Botm pg 1 TREAS MIDDLE NAME,17,17-Botm pg 1 TREAS MIDDLE NAME,17,Botm pg 1 TREAS MIDDLE NAME,17,17-Botm pg 1 TREAS MIDDLE NAME
+treasurer_prefix,18,18-Botm pg 1 TREAS PREFIX,18,18-Botm pg 1 TREAS PREFIX,18,Botm pg 1 TREAS PREFIX,18,18-Botm pg 1 TREAS PREFIX
+treasurer_suffix,19,19-Botm pg 1 TREAS SUFFIX,19,19-Botm pg 1 TREAS SUFFIX,19,Botm pg 1 TREAS SUFFIX,19,19-Botm pg 1 TREAS SUFFIX
+date_signed,20,20-Botm pg 1 TREAS DATE,20,20-Botm pg 1 TREAS DATE,20,Botm pg 1 TREAS DATE,20,20-Botm pg 1 TREAS DATE
+col_a_cash_on_hand_beginning_period,21,21-6 (b) Cash on Hand beginning,21,21-6 (b) Cash on Hand beginning,21,6 (b) Cash on Hand beginning,21,21-6 (b) Cash on Hand beginning
+col_a_total_receipts,22,22-6 (c) Total Receipts,22,22-6 (c) Total Receipts,22,6 (c) Total Receipts,22,22-6 (c) Total Receipts
+col_a_subtotal,23,23-6 (d) Subtotal,23,23-6 (d) Subtotal,23,6 (d) Subtotal,23,23-6 (d) Subtotal
+col_a_total_disbursements,24,24-7 Total Disbursements,24,24-7 Total Disbursements,24,7 Total Disbursements,24,24-7 Total Disbursements
+col_a_cash_on_hand_close_of_period,25,25-8 Cash on Hand at Close,25,25-8 Cash on Hand at Close,25,8 Cash on Hand at Close,25,25-8 Cash on Hand at Close
+col_a_debts_to,26,26-9 Debts to,26,26-9 Debts to,26,9 Debts to,26,26-9 Debts to
+col_a_debts_by,27,27-10 Debts by,27,27-10 Debts by,27,10 Debts by,27,27-10 Debts by
+qualified_committee,28,28-Botm pg 2 Qualified Committee,28,28-Botm pg 2 Qualified Committee,28,Botm pg 2 Qualified Committee,28,28-Botm pg 2 Qualified Committee
+col_a_individuals_itemized,29,29-11 (a) (i) Itemized,29,29-11 (a) (i) Itemized,29,11 (a) (i) Itemized,29,29-11 (a) (i) Itemized
+col_a_individuals_unitemized,30,30-11 (a) (ii) Unitemized,30,30-11 (a) (ii) Unitemized,30,11 (a) (ii) Unitemized,30,30-11 (a) (ii) Unitemized
+col_a_individual_contribution_total,31,31-11 (a) (iii) Total,31,31-11 (a) (iii) Total,31,11 (a) (iii) Total,31,31-11 (a) (iii) Total
+col_a_political_party_committees,32,32-11 (b) Political Party Committees,32,32-11 (b) Political Party Committees,32,11 (b) Political Party Committees,32,32-11 (b) Political Party Committees
+col_a_other_political_committees_pacs,33,33-11 (c) Other Political Committees (PACs),33,33-11 (c) Other Political Committees (PACs),33,11 (c) Other Political Committees (PACs),33,33-11 (c) Other Political Committees (PACs)
+col_a_total_contributions,34,34-11 (d) Total Contributions,34,34-11 (d) Total Contributions,34,11 (d) Total Contributions,34,34-11 (d) Total Contributions
+col_a_transfers_from_aff_other_party_cmttees,35,35-12 Transfers from Affiliated/Other Party Cmtes,35,35-12 Transfers from Affiliated/Other Party Cmtes,35,12 Transfers from Affiliated/Other Party Cmtes,35,35-12 Transfers from Affiliated/Other Party Cmtes
+col_a_total_loans,36,36-13 All Loans Received,36,36-13 All Loans Received,36,13 All Loans Received,36,36-13 All Loans Received
+col_a_total_loan_repayments_received,37,37-14 Loan Repayments Received,37,37-14 Loan Repayments Received,37,14 Loan Repayments Received,37,37-14 Loan Repayments Received
+col_a_offsets_to_expenditures,38,38-15 Offsets to Operating Expenditures (refunds),38,38-15 Offsets to Operating Expenditures (refunds),38,15 Offsets to Operating Expenditures (refunds),38,38-15 Offsets to Operating Expenditures (refunds)
+col_a_total_contributions_refunds,39,39-16 Refunds of Federal Contributions,39,39-16 Refunds of Federal Contributions,39,16 Refunds of Federal Contributions,39,39-16 Refunds of Federal Contributions
+col_a_other_federal_receipts,40,40-17 Other Federal Receipts (dividends),40,40-17 Other Federal Receipts (dividends),40,17 Other Federal Receipts (dividends),40,40-17 Other Federal Receipts (dividends)
+col_a_transfers_from_nonfederal_h3,41,41-18 (a) Transfers from Nonfederal Account (H3),41,41-18 (a) Transfers from Nonfederal Account (H3),41,18 (a) Transfers from Nonfederal Account (H3),41,41-18 (a) Transfers from Nonfederal Account (H3)
+col_a_levin_funds,42,42-18 (b) Transfers from Non-Federal (Levin - H5),42,42-18 (b) Transfers from Non-Federal (Levin - H5),42,18 (b) Transfers from Non-Federal (Levin - H5),42,42-18 (b) Transfers from Non-Federal (Levin - H5)
+col_a_total_nonfederal_transfers,43,43-18 (c) Total Non-Federal Transfers (18a+18b),43,43-18 (c) Total Non-Federal Transfers (18a+18b),43,18 (c) Total Non-Federal Transfers (18a+18b),43,43-18 (c) Total Non-Federal Transfers (18a+18b)
+col_a_total_receipts,44,44-19 Total Receipts,44,44-19 Total Receipts,44,19 Total Receipts,44,44-19 Total Receipts
+col_a_total_federal_receipts,45,45-20 Total Federal Receipts,45,45-20 Total Federal Receipts,45,20 Total Federal Receipts,45,45-20 Total Federal Receipts
+col_a_shared_operating_expenditures_federal,46,46-21 (a) (i) Federal Share,46,46-21 (a) (i) Federal Share,46,21 (a) (i) Federal Share,46,46-21 (a) (i) Federal Share
+col_a_shared_operating_expenditures_nonfederal,47,47-21 (a) (ii) Non-Federal Share,47,47-21 (a) (ii) Non-Federal Share,47,21 (a) (ii) Non-Federal Share,47,47-21 (a) (ii) Non-Federal Share
+col_a_other_federal_operating_expenditures,48,48-21 (b) Other Federal Operating Expenditures,48,48-21 (b) Other Federal Operating Expenditures,48,21 (b) Other Federal Operating Expenditures,48,48-21 (b) Other Federal Operating Expenditures
+col_a_total_operating_expenditures,49,49-21 (c) Total Operating Expenditures,49,49-21 (c) Total Operating Expenditures,49,21 (c) Total Operating Expenditures,49,49-21 (c) Total Operating Expenditures
+col_a_transfers_to_affiliated,50,50-22 Transfers to Affiliated/Other Party Cmtes,50,50-22 Transfers to Affiliated/Other Party Cmtes,50,22 Transfers to Affiliated/Other Party Cmtes,50,50-22 Transfers to Affiliated/Other Party Cmtes
+col_a_contributions_to_candidates,51,51-23 Contributions to Federal Candidates/Cmtes,51,51-23 Contributions to Federal Candidates/Cmtes,51,23 Contributions to Federal Candidates/Cmtes,51,51-23 Contributions to Federal Candidates/Cmtes
+col_a_independent_expenditures,52,52-24 Independent Expenditures,52,52-24 Independent Expenditures,52,24 Independent Expenditures,52,52-24 Independent Expenditures
+col_a_coordinated_expenditures_by_party_committees,53,53-25 Coordinated Expend made by Party Cmtes,53,53-25 Coordinated Expend made by Party Cmtes,53,25 Coordinated Expend made by Party Cmtes,53,53-25 Coordinated Expend made by Party Cmtes
+col_a_total_loan_repayments_made,54,54-26 Loan Repayments,54,54-26 Loan Repayments,54,26 Loan Repayments,54,54-26 Loan Repayments
+col_a_loans_made,55,55-27 Loans Made,55,55-27 Loans Made,55,27 Loans Made,55,55-27 Loans Made
+col_a_refunds_to_individuals,56,56-28 (a) Individuals/Persons,56,56-28 (a) Individuals/Persons,56,28 (a) Individuals/Persons,56,56-28 (a) Individuals/Persons
+col_a_refunds_to_party_committees,57,57-28 (b) Political Party Committees,57,57-28 (b) Political Party Committees,57,28 (b) Political Party Committees,57,57-28 (b) Political Party Committees
+col_a_refunds_to_other_committees,58,58-28 (c) Other Political Committees,58,58-28 (c) Other Political Committees,58,28 (c) Other Political Committees,58,58-28 (c) Other Political Committees
+col_a_total_refunds,59,59-28 (d) Total Contributions Refunds,59,59-28 (d) Total Contributions Refunds,59,28 (d) Total Contributions Refunds,59,59-28 (d) Total Contributions Refunds
+col_a_other_disbursements,60,60-29 Other Disbursements,60,60-29 Other Disbursements,60,29 Other Disbursements,60,60-29 Other Disbursements
+col_a_federal_election_activity_federal_share,61,61-30 (a) (i) Shared Federal Activity (H6) Fed Share,61,61-30 (a) (i) Shared Federal Activity (H6) Fed Share,61,30 (a) (i) Shared Federal Activity (H6) Fed Share,61,61-30 (a) (i) Shared Federal Activity (H6) Fed Share
+col_a_federal_election_activity_levin_share,62,62-30 (a) (ii) Shared Federal Activity (H6) Non-Fed,62,62-30 (a) (ii) Shared Federal Activity (H6) Non-Fed,62,30 (a) (ii) Shared Federal Activity (H6) Non-Fed,62,62-30 (a) (ii) Shared Federal Activity (H6) Non-Fed
+col_a_federal_election_activity_all_federal,63,63-30 (b) Non-Allocable 100% Fed Election Activity,63,63-30 (b) Non-Allocable 100% Fed Election Activity,63,30 (b) Non-Allocable 100% Fed Election Activity,63,63-30 (b) Non-Allocable 100% Fed Election Activity
+col_a_federal_election_activity_total,64,64-30 (c) Total Federal Election Activity,64,64-30 (c) Total Federal Election Activity,64,30 (c) Total Federal Election Activity,64,64-30 (c) Total Federal Election Activity
+col_a_total_disbursements,65,65-31 Total Disbursements,65,65-31 Total Disbursements,65,31 Total Disbursements,65,65-31 Total Disbursements
+col_a_total_federal_disbursements,66,66-32 Total Federal Disbursements,66,66-32 Total Federal Disbursements,66,32 Total Federal Disbursements,66,66-32 Total Federal Disbursements
+col_a_total_contributions,67,67-33 Total Contributions,67,67-33 Total Contributions,67,33 Total Contributions,67,67-33 Total Contributions
+col_a_total_contributions_refunds,68,68-34 Total Contribution Refunds,68,68-34 Total Contribution Refunds,68,34 Total Contribution Refunds,68,68-34 Total Contribution Refunds
+col_a_net_contributions,69,69-35 Net Contributions,69,69-35 Net Contributions,69,35 Net Contributions,69,69-35 Net Contributions
+col_a_total_federal_operating_expenditures,70,70-36 Total Federal Operating Expenditures,70,70-26 Total Federal Operating Expenditures,70,26 Total Federal Operating Expenditures,70,70-26 Total Federal Operating Expenditures
+col_a_total_offsets_to_expenditures,71,71-37 Offsets to Operating Expenditures,71,71-37 Offsets to Operating Expenditures,71,37 Offsets to Operating Expenditures,71,71-37 Offsets to Operating Expenditures
+col_a_net_operating_expenditures,72,72-38 Net Operating Expenditures,72,72-38 Net Operating Expenditures,72,38 Net Operating Expenditures,72,72-38 Net Operating Expenditures
+col_b_cash_on_hand_jan_1,73,73-6 (a) Cash on Hand Year,73,73-6 (a) Cash on Hand Year,73,6 (a) Cash on Hand Year,73,73-6 (a) Cash on Hand Year
+6_(a)_cash_on_hand,74,74-6 (a) Cash on Hand,74,74-6 (a) Cash on Hand,74,6 (a) Cash on Hand,74,74-6 (a) Cash on Hand
+col_b_total_receipts,75,75-6 (c) Total Receipts,75,75-6 (c) Total Receipts,75,6 (c) Total Receipts,75,75-6 (c) Total Receipts
+col_b_subtotal,76,76-6 (d) Subtotal,76,76-6 (d) Subtotal,76,6 (d) Subtotal,76,76-6 (d) Subtotal
+col_b_total_disbursements,77,77-7 Total disbursements,77,77-7 Total disbursements,77,7 Total disbursements,77,77-7 Total disbursements
+col_b_cash_on_hand_close_of_period,78,78-8 Cash on Hand Close,78,78-8 Cash on Hand Close,78,8 Cash on Hand Close,78,78-8 Cash on Hand Close
+col_b_individuals_itemized,79,79-11 (a) (i) Itemized,79,79-11 (a) (i) Itemized,79,11 (a) (i) Itemized,79,79-11 (a) (i) Itemized
+col_b_individuals_unitemized,80,80-11 (a) (ii) Unitemized,80,80-11 (a) (ii) Unitemized,80,11 (a) (ii) Unitemized,80,80-11 (a) (ii) Unitemized
+col_b_individual_contribution_total,81,81-11 (a) (iii) Total,81,81-11 (a) (iii) Total,81,11 (a) (iii) Total,81,81-11 (a) (iii) Total
+col_b_political_party_committees,82,82-11 (b) Political Party committees,82,82-11 (b) Political Party committees,82,11 (b) Political Party committees,82,82-11 (b) Political Party committees
+col_b_other_political_committees_pacs,83,83-11 (c) Other Political Committees (PACs),83,83-11 (c) Other Political Committees (PACs),83,11 (c) Other Political Committees (PACs),83,83-11 (c) Other Political Committees (PACs)
+col_b_total_contributions,84,84-11 (d) Total Contributions,84,84-11 (d) Total Contributions,84,11 (d) Total Contributions,84,84-11 (d) Total Contributions
+col_b_transfers_from_aff_other_party_cmttees,85,85-12 Transfers from Affiliated/Other Party Cmtes,85,85-12 Transfers from Affiliated/Other Party Cmtes,85,12 Transfers from Affiliated/Other Party Cmtes,85,85-12 Transfers from Affiliated/Other Party Cmtes
+col_b_total_loans,86,86-13 All Loans Received,86,86-13 All Loans Received,86,13 All Loans Received,86,86-13 All Loans Received
+col_b_total_loan_repayments_received,87,87-14 Loan Repayments Received,87,87-14 Loan Repayments Received,87,14 Loan Repayments Received,87,87-14 Loan Repayments Received
+col_b_offsets_to_expenditures,88,88-15 Offsets to Operating Expenditures (refunds),88,88-15 Offsets to Operating Expenditures (refunds),88,15 Offsets to Operating Expenditures (refunds),88,88-15 Offsets to Operating Expenditures (refunds)
+col_b_total_contributions_refunds,89,89-16 Refunds of Federal Contributions,89,89-16 Refunds of Federal Contributions,89,16 Refunds of Federal Contributions,89,89-16 Refunds of Federal Contributions
+col_b_other_federal_receipts,90,90-17 Other Federal Receipts (dividends),90,90-17 Other Federal Receipts (dividends),90,17 Other Federal Receipts (dividends),90,90-17 Other Federal Receipts (dividends)
+col_b_transfers_from_nonfederal_h3,91,91-18 (a) Transfers from Nonfederal Account (H3),91,91-18 (a) Transfers from Nonfederal Account (H3),91,18 (a) Transfers from Nonfederal Account (H3),91,91-18 (a) Transfers from Nonfederal Account (H3)
+col_b_levin_funds,92,92-18 (b) Transfers from Non-Federal (Levin - H5),92,92-18 (b) Transfers from Non-Federal (Levin - H5),92,18 (b) Transfers from Non-Federal (Levin - H5),92,92-18 (b) Transfers from Non-Federal (Levin - H5)
+col_b_total_nonfederal_transfers,93,93-18 (c) Total Non-Federal Transfers (18a+18b),93,93-18 (c) Total Non-Federal Transfers (18a+18b),93,18 (c) Total Non-Federal Transfers (18a+18b),93,93-18 (c) Total Non-Federal Transfers (18a+18b)
+col_b_total_receipts,94,94-19 Total Receipts,94,94-19 Total Receipts,94,19 Total Receipts,94,94-19 Total Receipts
+col_b_total_federal_receipts,95,95-20 Total Federal Receipts,95,95-20 Total Federal Receipts,95,20 Total Federal Receipts,95,95-20 Total Federal Receipts
+col_b_shared_operating_expenditures_federal,96,96-21 (a) (i) Federal Share,96,96-21 (a) (i) Federal Share,96,21 (a) (i) Federal Share,96,96-21 (a) (i) Federal Share
+col_b_shared_operating_expenditures_nonfederal,97,97-21 (a) (ii) Non-Federal Share,97,97-21 (a) (ii) Non-Federal Share,97,21 (a) (ii) Non-Federal Share,97,97-21 (a) (ii) Non-Federal Share
+col_b_other_federal_operating_expenditures,98,98-21 (b) Other Federal Operating Expenditures,98,98-21 (b) Other Federal Operating Expenditures,98,21 (b) Other Federal Operating Expenditures,98,98-21 (b) Other Federal Operating Expenditures
+col_b_total_operating_expenditures,99,99-21 (c) Total operating Expenditures,99,99-21 (c) Total operating Expenditures,99,21 (c) Total operating Expenditures,99,99-21 (c) Total operating Expenditures
+col_b_transfers_to_affiliated,100,100-22 Transfers to Affiliated/Other Party Cmtes,100,100-22 Transfers to Affiliated/Other Party Cmtes,100,22 Transfers to Affiliated/Other Party Cmtes,100,100-22 Transfers to Affiliated/Other Party Cmtes
+col_b_contributions_to_candidates,101,101-23 Contributions to Federal Candidates/Cmtes,101,101-23 Contributions to Federal Candidates/Cmtes,101,23 Contributions to Federal Candidates/Cmtes,101,101-23 Contributions to Federal Candidates/Cmtes
+col_b_independent_expenditures,102,102-24 Independent Expenditures,102,102-24 Independent Expenditures,102,24 Independent Expenditures,102,102-24 Independent Expenditures
+col_b_coordinated_expenditures_by_party_committees,103,103-25 Coordinated Expend made by Party Cmtes,103,103-25 Coordinated Expend made by Party Cmtes,103,25 Coordinated Expend made by Party Cmtes,103,103-25 Coordinated Expend made by Party Cmtes
+col_b_total_loan_repayments_made,104,104-26 Loan Repayments Made,104,104-26 Loan Repayments Made,104,26 Loan Repayments Made,104,104-26 Loan Repayments Made
+col_b_loans_made,105,105-27 Loans Made,105,105-27 Loans Made,105,27 Loans Made,105,105-27 Loans Made
+col_b_refunds_to_individuals,106,106-28 (a) Individuals/Persons,106,106-28 (a) Individuals/Persons,106,28 (a) Individuals/Persons,106,106-28 (a) Individuals/Persons
+col_b_refunds_to_party_committees,107,107-28 (b) Political Party Committees,107,107-28 (b) Political Party Committees,107,28 (b) Political Party Committees,107,107-28 (b) Political Party Committees
+col_b_refunds_to_other_committees,108,108-28 (c) Other Political Committees,108,108-28 (c) Other Political Committees,108,28 (c) Other Political Committees,108,108-28 (c) Other Political Committees
+col_b_total_refunds,109,109-28 (d) Total contributions Refunds,109,109-28 (d) Total contributions Refunds,109,28 (d) Total contributions Refunds,109,109-28 (d) Total contributions Refunds
+col_b_other_disbursements,110,110-29 Other Disbursements,110,110-29 Other Disbursements,110,29 Other Disbursements,110,110-29 Other Disbursements
+col_b_federal_election_activity_federal_share,111,111-30 (a) (i) Shared Federal Activity (H6) Fed Share,111,111-30 (a) (i) Shared Federal Activity (H6) Fed Share,111,30 (a) (i) Shared Federal Activity (H6) Fed Share,111,111-30 (a) (i) Shared Federal Activity (H6) Fed Share
+col_b_federal_election_activity_levin_share,112,112-30 (a) (ii) Shared Federal Activity (H6) Non-Fed,112,112-30 (a) (ii) Shared Federal Activity (H6) Non-Fed,112,30 (a) (ii) Shared Federal Activity (H6) Non-Fed,112,112-30 (a) (ii) Shared Federal Activity (H6) Non-Fed
+col_b_federal_election_activity_all_federal,113,113-30 (b) Non-Allocable 100% Fed Election Activity,113,113-30 (b) Non-Allocable 100% Fed Election Activity,113,30 (b) Non-Allocable 100% Fed Election Activity,113,113-30 (b) Non-Allocable 100% Fed Election Activity
+col_b_federal_election_activity_total,114,114-30 (c) Total Federal Election Activity,114,114-30 (c) Total Federal Election Activity,114,30 (c) Total Federal Election Activity,114,114-30 (c) Total Federal Election Activity
+col_b_total_disbursements,115,115-31 Total Disbursements,115,115-31 Total Disbursements,115,31 Total Disbursements,115,115-31 Total Disbursements
+col_b_total_federal_disbursements,116,116-32 Total Federal Disbursements,116,116-32 Total Federal Disbursements,116,32 Total Federal Disbursements,116,116-32 Total Federal Disbursements
+col_b_total_contributions,117,117-33 Total Contributions,117,117-33 Total Contributions,117,33 Total Contributions,117,117-33 Total Contributions
+col_b_total_contributions_refunds,118,118-34 Total Contribution Refunds,118,118-34 Total Contribution Refunds,118,34 Total Contribution Refunds,118,118-34 Total Contribution Refunds
+col_b_net_contributions,119,119-35 Net contributions,119,119-35 Net contributions,119,35 Net contributions,119,119-35 Net contributions
+col_b_total_federal_operating_expenditures,120,120-36 Total Federal Operating Expenditures,,,,,,
+36_total_federal_operating_expenditures,,,120,120-36 Total Federal Operating Expenditures,120,36 Total Federal Operating Expenditures,120,120-36 Total Federal Operating Expenditures
+col_b_total_offsets_to_expenditures,121,121-37 Offsets to Operating Expenditures,121,121-37 Offsets to Operating Expenditures,121,37 Offsets to Operating Expenditures,121,121-37 Offsets to Operating Expenditures
+col_b_net_operating_expenditures,122,122-38 Net Operating Expenditures,122,122-38 Net Operating Expenditures,122,38 Net Operating Expenditures,122,122-38 Net Operating Expenditures
+image_number_of_page,123,123-1st PageLeft Marg BEGINNING IMAGE NUMBER,123,123-1st PageLeft Marg BEGINNING IMAGE NUMBER,123,1st PageLeft Marg BEGINNING IMAGE NUMBER,123,123-1st PageLeft Marg BEGINNING IMAGE NUMBER

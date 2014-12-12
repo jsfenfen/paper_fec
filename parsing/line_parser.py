@@ -1,20 +1,27 @@
-""" Parse a line from an FEC file based on the NYT's FECH utility's file definition csvs, available here: https://github.com/NYTimes/Fech/tree/master/sources"""
+""" Parse a line from an FEC file based on the NYT's FECH utility's file definition csvs, available here: https://github.com/NYTimes/Fech/tree/master/sources . 
+This version adds csvs for the converted paper files which have since become available. 
+
+"""
 
 import csv
 import re
 
+from utils import clean_entry
 # where is the sources directory located ?
-from read_FEC_settings import CSV_FILE_DIRECTORY
+from read_FEC_settings import CSV_FILE_DIRECTORY, PAPER_CSV_FILE_DIRECTORY
 
 
 class line_parser(object):
 
-    def __init__(self, form):
+    def __init__(self, form, is_paper=False):
         self.form = form
         self.regex_dict = {}
         self.column_locations_dict = {}
-
-        form_file = "%s/%s.csv" % (CSV_FILE_DIRECTORY, form)
+        
+        if is_paper:
+            form_file = "%s/%s.csv" % (PAPER_CSV_FILE_DIRECTORY, form)
+        else:
+            form_file = "%s/%s.csv" % (CSV_FILE_DIRECTORY, form)
         # Need to open in universal newline mode
         form_reader = csv.reader(open(form_file, 'rU'))
         header = form_reader.next()
@@ -66,7 +73,7 @@ class line_parser(object):
             #print "PARSER: %s version: %s, line: %s len: %s" % (column, version, col_position, len(line_array))
             # sometimes trailing commas are omitted, so test that there actually is a value
             if (col_position <= len(line_array) - 1):
-                line_dict[column] = line_array[col_position]
+                line_dict[column] = clean_entry(line_array[col_position])
             else:
                 line_dict[column] = ''
         return line_dict

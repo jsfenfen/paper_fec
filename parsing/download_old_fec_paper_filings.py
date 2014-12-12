@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 
 from urllib2 import URLError
 
-from read_FEC_settings import FEC_FILE_LOCATION, USER_AGENT, ZIP_DIRECTORY, FILECACHE_DIRECTORY, DELAY_TIME
+from read_FEC_settings import FEC_FILE_LOCATION, USER_AGENT, PAPER_ZIP_DIRECTORY, PAPER_FILECACHE_DIRECTORY, DELAY_TIME
 
 from utils import download_with_headers
 
@@ -34,7 +34,7 @@ def main():
     
     end_date = parse(args.end)
     start_date = parse(args.start)
-    print "Downloading files from %s to %s ; zip files will be saved to %s and unarchived to %s" % (args.start, args.end, ZIP_DIRECTORY, FILECACHE_DIRECTORY)
+    print "Downloading files from %s to %s ; zip files will be saved to %s and unarchived to %s" % (args.start, args.end, PAPER_ZIP_DIRECTORY, PAPER_FILECACHE_DIRECTORY)
     
     # get the current directory listing
     ftp_paper_listing = download_with_headers("ftp://ftp.fec.gov/FEC/paper/")
@@ -49,13 +49,13 @@ def main():
             if filedate >= start_date and filedate <= end_date:
                 print "found file: %s" % (filelocation)
                 
-                downloaded_zip_file = ZIP_DIRECTORY + "/" + filename
+                downloaded_zip_file = PAPER_ZIP_DIRECTORY + "/" + filename
                 dfile = open(downloaded_zip_file, "w")
                 dfile.write(download_with_headers(filelocation))
                 dfile.close()
 
                 # Now unzip 'em 
-                cmd = "unzip -q -o %s -d %s" % (downloaded_zip_file, FILECACHE_DIRECTORY)
+                cmd = "unzip -q -o %s -d %s" % (downloaded_zip_file, PAPER_FILECACHE_DIRECTORY)
                 print "Now unzipping with %s" % (cmd)
                 system(cmd)
 

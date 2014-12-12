@@ -1,0 +1,7 @@
+canonical,^2.6|3.0|3.1,,^2.4|2.3|2.2,,^1.0,
+record_type,1,Record Type,1,Record Type,1,Record Type
+fec_version,2,FEC Version #,2,FEC Version #2,FEC Version #
+soft_name,3,Vendor,3,Vendor,3,Vendor
+batch_number,4,FEC Batch Number,4,FEC Batch Number,4,FEC Batch Number
+received_date,5,RECEIVED DATE,,,,
+report_id,6,FEC Original ID,5,FEC Original ID,,

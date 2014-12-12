@@ -33,3 +33,16 @@ def download_with_headers(url):
     headers = { 'User-Agent' : USER_AGENT }    
     req = Request(url, None, headers)
     return urlopen(req).read()
+
+# this is run on every entry--may need to be optimized.
+def clean_entry(entry):
+    
+    # It's common for entries to contain spaces
+    entry = entry.strip()
+    
+    # Some filing software seems to use carrots instead of spaces
+    entry = entry.replace("^"," ")
+    
+    # software called "Trail Blazer" adds quotes, which is shitty
+    # See 704636.fec
+    return entry.replace('"', "").upper()
