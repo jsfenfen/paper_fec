@@ -202,24 +202,33 @@ class paper_form_parser(object):
 
         # Init the line parsers for lines we'll need.
 
+
+        ## There are SC1 and SC2 variants -- we really should ignore them. 
+        
         # F3X -- periodic pac filing
         f3x = line_parser('F3X', True)
         f3 = line_parser('F3', True)
         sa = line_parser('SchA', True)
         sb = line_parser('SchB', True)
+        sc = line_parser('SchC', True)
+        sd = line_parser('SchD', True)
+        se = line_parser('SchE', True)
 
         # match form type to appropriate parsers; must be applied with re.I
         # the leading ^ are redundant if we're using re.match, but...
         self.line_dict = {
             '^SA': sa,
             '^SB': sb,
+            '^SC\/': sc,
+            '^SD': sd,
+            '^SE': se,
             '^F3[A|N|T]$': f3,
             '^F3X[A|N|T]$': f3x,
         }
 
         # we gotta test the regexes in the correct order, and if it's a match pull the line parser from line_dict. Use an array to insure they're tested in the order we want
         # these must be an *EXACT MATCH* to the way they appear in the line_dict above; they are used as the keys.
-        self.regex_array = ['^F3X[A|N|T]$','^F3[A|N|T]$', '^SB', '^SA' ]
+        self.regex_array = ['^F3X[A|N|T]$','^F3[A|N|T]$', '^SB', '^SA', '^SE','^SD','^SC\/', ]
 
     # This only checks the top level form name--not the individual lines. This tests the 'base' form as returned by filing.get_form_type() -- i.e. with the trailing A|N|T designator removed.
     def is_allowed_form(self, form_name):
