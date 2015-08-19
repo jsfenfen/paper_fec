@@ -1,16 +1,16 @@
-""" Parse a line from an FEC file based on the NYT's FECH utility's file definition csvs, available here: https://github.com/NYTimes/Fech/tree/master/sources . 
+"""
+Parse a line from an FEC file based on the NYT's FECH utility's file definition csvs, available here: https://github.com/NYTimes/Fech/tree/master/sources . 
 This version adds csvs for the converted paper files which have since become available. 
-
 """
 
 import csv
 import re
 
-from utils import clean_entry
-# where is the sources directory located ?
-from read_FEC_settings import CSV_FILE_DIRECTORY, PAPER_CSV_FILE_DIRECTORY
+from parsing.read_FEC_settings import CSV_FILE_DIRECTORY, PAPER_CSV_FILE_DIRECTORY
+from parsing.utils import clean_entry
 
 
+# [PEP8 _strongly_ prefers CapWords class names.]
 class line_parser(object):
 
     def __init__(self, form, is_paper=False):
@@ -22,6 +22,7 @@ class line_parser(object):
             form_file = "%s/%s.csv" % (PAPER_CSV_FILE_DIRECTORY, form)
         else:
             form_file = "%s/%s.csv" % (CSV_FILE_DIRECTORY, form)
+
         # Need to open in universal newline mode
         form_reader = csv.reader(open(form_file, 'rU'))
         header = form_reader.next()
@@ -29,8 +30,6 @@ class line_parser(object):
         for i, regex in enumerate(header):
             if (regex != '' and regex != 'canonical'):
                 self.regex_dict[regex] = i
-
-        #print self.regex_dict
 
         # read in the body rows
         body_rows = []
@@ -41,14 +40,15 @@ class line_parser(object):
         for regex in self.regex_dict:
             this_column_locations = {}
             for row in body_rows:
+
                 # the csv files sometimes are missing trailing commas when values are absent.
                 if (len(row) > self.regex_dict[regex]):
                     if (row[self.regex_dict[regex]] != ''):
+
                         # The csv files use 1-indexed positions - subtract 1 because
                         #  we want them 0-indexed.
                         this_column_locations[row[0]] = int(row[self.regex_dict[regex]]) - 1
             self.column_locations_dict[regex] = this_column_locations
-        #print regex, this_column_locations
 
     def get_column_locations(self, version):
         """Just return the raw column locations hash--I mean dict"""
@@ -58,6 +58,7 @@ class line_parser(object):
         """ Return a dict of all variables"""
         found_version = False
         regex_key = None
+
         # make sure we have this version; since these regexes are non-overlapping, we don't care about the order, and can iterate over the hash keys (instead of an ordered array)
         for regex in self.regex_dict:
             if (re.match(regex, version)):
@@ -70,7 +71,7 @@ class line_parser(object):
         line_dict = {}
         for column in self.column_locations_dict[regex_key]:
             col_position = self.column_locations_dict[regex_key][column]
-            #print "PARSER: %s version: %s, line: %s len: %s" % (column, version, col_position, len(line_array))
+
             # sometimes trailing commas are omitted, so test that there actually is a value
             if (col_position <= len(line_array) - 1):
                 line_dict[column] = clean_entry(line_array[col_position])

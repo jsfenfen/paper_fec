@@ -1,19 +1,16 @@
 import re
 import csv
-from utils import utf8_clean, clean_entry
 
-from read_FEC_settings import FILECACHE_DIRECTORY, PAPER_FILECACHE_DIRECTORY
-from header_parser import parse_header
+from parsing.header_parser import parse_header
+from parsing.read_FEC_settings import FILECACHE_DIRECTORY, PAPER_FILECACHE_DIRECTORY
+from parsing.utils import utf8_clean, clean_entry
 
 
-# Current FCC files are delimited by ascii 28
+# Current FCC files are delimited by ascii 28.
+# Electronic versions below 6 -- through 5.3 -- use a comma.
 new_delimiter = chr(28)
-# electronic versions less than 6 (so through 5.3) use a comma
 old_delimiter = ','
 
-## very old versions are really in .csv format, so strictly splitting on commas doesn't work:
-# 23132
-# "HDR","FEC","3.00","Vocus, Inc. PACPRO","6.16.099","","FEC-22522",1,""
 
 
 
