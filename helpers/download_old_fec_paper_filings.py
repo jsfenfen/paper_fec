@@ -1,17 +1,22 @@
-""" Util to download the zipped, raw OCR'ed paper fec files from the FEC ftp site and unzip them directly to the filecache directory. Assumes we can use unzip at the cmd prompt... """
-
-import re
+"""
+Utility to download the zipped, raw OCR'ed paper files from the FEC ftp site and unzip them directly to the filecache directory.
+If we do this ahead of time, we don't need to hit their site tons of times to backfill / analyze older data.
+Assumes we can use unzip at the cmd prompt.
+"""
+from argparse import ArgumentParser
 from datetime import date, timedelta
 from dateutil.parser import parse
 from os import system
+import re
 from time import sleep
-from argparse import ArgumentParser
-
 
 from urllib2 import URLError
 
-from parsing.read_FEC_settings import FEC_FILE_LOCATION, USER_AGENT, PAPER_ZIP_DIRECTORY, PAPER_FILECACHE_DIRECTORY, DELAY_TIME
-
+from parsing.read_FEC_settings import (FEC_FILE_LOCATION,
+                                                                USER_AGENT,
+                                                                PAPER_ZIP_DIRECTORY,
+                                                                PAPER_FILECACHE_DIRECTORY,
+                                                                DELAY_TIME)
 from parsing.utils import download_with_headers
 
 

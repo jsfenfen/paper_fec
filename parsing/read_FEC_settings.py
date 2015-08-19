@@ -1,31 +1,31 @@
+# [JACOB I WOULD LIKE THINGS LIKE THIS TO BE IN THE ENV, I THINK?]
+# [STILL MAKING UP MY MIND ABOUT IT.]
 CYCLE = '2016'
 
-# where does the FEC keep the daily zip files in bulk ? 
+# FEC daily bulk ZIP files URL. Requires the filing ID to be interpolated.
 FEC_FILE_LOCATION = "ftp://ftp.fec.gov/FEC/electronic/%s.zip"
 
-# where are the raw .fec files located? 
-#FEC_DOWNLOAD = "http://query.nictusa.com/dcdev/posted/%s.fec"
+# FEC raw .fec files URL. Requires the filing ID to be interpolated.
 FEC_DOWNLOAD = "http://docquery.fec.gov/dcdev/posted/%s.fec"
 
-#FEC_HTML_LOCATION = "http://query.nictusa.com/cgi-bin/dcdev/forms/%s/%s/"
+# [JACOB WHAT ARE THESE INTERPOLATIONS?]
 FEC_HTML_LOCATION = "http://docquery.fec.gov/cgi-bin/dcdev/forms/%s/%s/"
 
-FEC_CANDIDATE_SUMMARY = "http://www.fec.gov/fecviewer/CommitteeDetailCurrentSummary.do?tabIndex=1&candidateCommitteeId=%s&electionYr=2014" # candidate_id being used
+# Requires the candidate ID to be interpolated.
+FEC_CANDIDATE_SUMMARY = "http://www.fec.gov/fecviewer/CommitteeDetailCurrentSummary.do?tabIndex=1&candidateCommitteeId=%s&electionYr=2014"
 
 # How should our requests be signed? 
 USER_AGENT = "FEC READER 0.1; [ YOUR CONTACT INFO HERE ]"
 
-# scraper delay time, in seconds. 
-# THIS SHOULD BE AT LEAST 1! THE FEC DOESN'T APPRECIATE FOLKS HITTING THEIR SERVERS TOO HARD, AND WILL BLOCK YOU!
+# The FEC is known to block scrapers that do not have a delay.
+# 2 is sufficient to avoid this.
 DELAY_TIME=2
 
 LOG_NAME = 'fecparsing.log'
 
-
-# set system-specific info here. Start by copying FEC_local_settings.py-example to FEC_local_settings.py
+# Load any system-specific settings from the FEC_local_settings.py.
 try:
     from FEC_local_settings import *
 except Exception, e:
     print "Exception in local settings: %s" % (e)
     pass
-
