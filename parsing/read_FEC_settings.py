@@ -1,17 +1,19 @@
 # [JACOB I WOULD LIKE THINGS LIKE THIS TO BE IN THE ENV, I THINK?]
 # [STILL MAKING UP MY MIND ABOUT IT.]
+## This is only used in the download_old_fec_filings helper script in this repo
+## parsing itself is cycle independent.
 CYCLE = '2016'
 
-# FEC daily bulk ZIP files URL. Requires the filing ID to be interpolated.
+# FEC daily bulk ZIP files URL. Requires the date in YYYYMMDD format to be interpolated.
 FEC_FILE_LOCATION = "ftp://ftp.fec.gov/FEC/electronic/%s.zip"
 
 # FEC raw .fec files URL. Requires the filing ID to be interpolated.
 FEC_DOWNLOAD = "http://docquery.fec.gov/dcdev/posted/%s.fec"
 
-# [JACOB WHAT ARE THESE INTERPOLATIONS?]
+# FEC location of html pages of a filing. Requires the committee id and filing ID to be interpolated.
 FEC_HTML_LOCATION = "http://docquery.fec.gov/cgi-bin/dcdev/forms/%s/%s/"
 
-# Requires the candidate ID to be interpolated.
+# Requires the candidate ID to be interpolated. For reference only.
 FEC_CANDIDATE_SUMMARY = "http://www.fec.gov/fecviewer/CommitteeDetailCurrentSummary.do?tabIndex=1&candidateCommitteeId=%s&electionYr=2014"
 
 # How should our requests be signed? 
