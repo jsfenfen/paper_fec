@@ -1,0 +1,37 @@
+import os
+
+# grandparent dir of this file
+ARCHIVE_DIR_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+# where can we save local files? THIS MUST ALREADY EXIST
+FILECACHE_DIRECTORY = ARCHIVE_DIR_ROOT + '/data/fec_filings'
+PAPER_FILECACHE_DIRECTORY = ARCHIVE_DIR_ROOT + '/paper_data/fec_filings'
+
+print FILECACHE_DIRECTORY
+
+
+# where can we save raw zip files downloaded from the FEC before unzipping
+ZIP_DIRECTORY = ARCHIVE_DIR_ROOT + '/data/zipped_fec_filings'
+PAPER_ZIP_DIRECTORY = ARCHIVE_DIR_ROOT + '/paper_data/zipped_fec_filings'
+
+# Where the processed json files go
+JSON_DIRECTORY = ARCHIVE_DIR_ROOT + '/paper_data/json'
+
+# ASSUMES THAT FILECACHE_DIRECTORY AND ZIP_DIRECTORY EXIST AND ARE WRITEABLE!
+
+LOG_DIRECTORY = ARCHIVE_DIR_ROOT + "/log"
+
+
+# where can we save raw zip files downloaded from the FEC before unzipping
+ZIP_DIRECTORY = ARCHIVE_DIR_ROOT + '/data/zipped_fec_filings'
+
+# where are NYT's csv definitional files? These are generally swiped from here, and fixed up (some of them need tweaking): https://github.com/NYTimes/Fech/tree/master/sources -- or maybe bycoffe's branch: https://github.com/NYTimes/Fech/tree/huffingtonpost/sources
+#CSV_FILE_DIRECTORY = ARCHIVE_DIR_ROOT + '/sources'
+
+# alternate source directory with massaged names. See read_source_column_names
+CSV_FILE_DIRECTORY = ARCHIVE_DIR_ROOT + '/parsing/sourcesalt'
+PAPER_CSV_FILE_DIRECTORY = ARCHIVE_DIR_ROOT + '/parsing/paper_sources'
+
+
+USER_AGENT = "paper FEC (0.0.1)"
+DELAY_TIME = 1
