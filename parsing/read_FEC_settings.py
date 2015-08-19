@@ -11,7 +11,7 @@ FEC_DOWNLOAD = "http://docquery.fec.gov/dcdev/posted/%s.fec"
 # [JACOB WHAT ARE THESE INTERPOLATIONS?]
 FEC_HTML_LOCATION = "http://docquery.fec.gov/cgi-bin/dcdev/forms/%s/%s/"
 
-# REquires the candidate ID to be interpolated.
+# Requires the candidate ID to be interpolated.
 FEC_CANDIDATE_SUMMARY = "http://www.fec.gov/fecviewer/CommitteeDetailCurrentSummary.do?tabIndex=1&candidateCommitteeId=%s&electionYr=2014"
 
 # How should our requests be signed? 

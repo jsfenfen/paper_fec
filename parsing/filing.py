@@ -45,12 +45,12 @@ class filing(object):
 
         if self.is_paper:
             self.local_file_location = "%s/%s.fec" % (PAPER_FILECACHE_DIRECTORY, self.filing_number)
-            
+
         else:
             self.local_file_location = "%s/%s.fec" % (FILECACHE_DIRECTORY, self.filing_number)
-        
+
         self.fh = open(self.local_file_location, 'r')
-        
+
         # The header row indicates what type of file this is.
         self.header_row = self.fh.readline()    
 
@@ -94,15 +94,14 @@ class filing(object):
         self.headers['filing_amended'] = None
         self.headers['report_num'] = None
         self.version = self.headers['fec_version']
-        
-        
+
         try:
             self.headers['form'] = clean_entry(summary_line[0])
             self.headers['fec_id'] = clean_entry(summary_line[1])
 
         except IndexError:
             return False
-        
+
         # Amendment discovery.
         # Identify if this is an amemndment to a filing.
         # If so, identify which filing it amends.        
