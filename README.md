@@ -18,7 +18,10 @@ Still in the paper_fec directory, run the demo with `python -m examples.read_FEC
 Getting more files
 =====
 
-The demo worked on a single .fec file. There's a utility for retrieving many .fec files from the zipped archive that FEC maintains. You can see its usage with: `python -m helpers.download_old_fec_filings --help`
+The demo worked on a single .fec file. There's a utility for retrieving many .fec files from the zipped archive that FEC maintains. Each day's zip file includes all the .fec files received by FEC during that day. Some can be substantial in size.
+
+
+You can see its usage with: `python -m helpers.download_old_fec_filings --help`
 	
 	usage: download_old_fec_filings.py [-h] [--start START] [--end END]
 	
