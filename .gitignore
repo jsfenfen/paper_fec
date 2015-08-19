@@ -1,3 +1,8 @@
+# any local_settings files
+
+*local_settings.py
+*local_settings.pyc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
