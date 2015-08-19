@@ -10,9 +10,9 @@ from argparse import ArgumentParser
 
 from urllib2 import URLError
 
-from read_FEC_settings import FEC_FILE_LOCATION, USER_AGENT, PAPER_ZIP_DIRECTORY, PAPER_FILECACHE_DIRECTORY, DELAY_TIME
+from parsing.read_FEC_settings import FEC_FILE_LOCATION, USER_AGENT, PAPER_ZIP_DIRECTORY, PAPER_FILECACHE_DIRECTORY, DELAY_TIME
 
-from utils import download_with_headers
+from parsing.utils import download_with_headers
 
 
 # Default to everything filed this year. 

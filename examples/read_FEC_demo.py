@@ -1,20 +1,22 @@
-from form_parser import form_parser, ParserMissingError
-from filing import filing
+"""
+Parse some .fec forms.
+
+"""
+
+from parsing.form_parser import form_parser, ParserMissingError
+from parsing.filing import filing
 
 # load up a form parser
 fp = form_parser()
 
-
-# v 3.00 : 23132  
-# v 3.00 : 23176
-# v 3.00 : 23178
-# v 5.3 : 255363
-# v 5.3 : 312490
-# v 6.1 : 314083
-filingnumbers=(23132, 314083) 
+filingnumbers=[1021457,]
 
 for filingnum in filingnumbers:
+    
+    # This will fail if the filings haven't already been downloaded 
+    # to the location specified in parsing.read_FEC_settings.py
     f1 = filing(filingnum)
+    
     formtype = f1.get_form_type()
     version = f1.version
 
@@ -31,7 +33,11 @@ for filingnum in filingnumbers:
         
     print "Version is: %s" % (version)
     firstrow = fp.parse_form_line(f1.get_first_row(), version)    
-    #print "First row is: %s" % (firstrow)
+    print "First row is: %s" % (firstrow)
+    
+    # if we only need info from the first row a.k.a. the form line, we're done.
+    # otherwise, continue to keep reading the actual rows. 
+    
     
     linenum = 0
     while True:
