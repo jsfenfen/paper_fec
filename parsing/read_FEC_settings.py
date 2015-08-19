@@ -1,4 +1,4 @@
-CYCLE = '2014'
+CYCLE = '2016'
 
 # where does the FEC keep the daily zip files in bulk ? 
 FEC_FILE_LOCATION = "ftp://ftp.fec.gov/FEC/electronic/%s.zip"
@@ -19,7 +19,7 @@ USER_AGENT = "FEC READER 0.1; [ YOUR CONTACT INFO HERE ]"
 # THIS SHOULD BE AT LEAST 1! THE FEC DOESN'T APPRECIATE FOLKS HITTING THEIR SERVERS TOO HARD, AND WILL BLOCK YOU!
 DELAY_TIME=2
 
-LOG_NAME = 'fcc_rss_reader.txt'
+LOG_NAME = 'fecparsing.log'
 
 
 # set system-specific info here. Start by copying FEC_local_settings.py-example to FEC_local_settings.py
