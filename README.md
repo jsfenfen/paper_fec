@@ -1,6 +1,5 @@
 # paper_fec
-
-Parses the raw .FEC files using (a slightly improved version of) the NYT's csv sources files.
+**paper_fec** downloads and parses raw .fec files using a slightly improved version of the [canonical CSV header files](https://github.com/dwillis/fech-sources) maintained by the New York Times.
 
 ## Installation
 We recommend [virtualenv](https://virtualenv.pypa.io/en/latest/) and [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/).
