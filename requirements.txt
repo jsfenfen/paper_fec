@@ -1,1 +1,4 @@
 python-dateutil
+
+# for dump_filing_details.py helper
+requests

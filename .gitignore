@@ -1,5 +1,6 @@
 # any local_settings files
-
+*APIKEY.py
+*APIKEY.pyc
 *local_settings.py
 *local_settings.pyc
 
