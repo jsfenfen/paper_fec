@@ -1,15 +1,6 @@
-"""
-
-
-"""
-
-
-import urllib2
-import os
 import re
 import csv
 from utils import utf8_clean, clean_entry
-from time import sleep
 
 from read_FEC_settings import FILECACHE_DIRECTORY, PAPER_FILECACHE_DIRECTORY
 from header_parser import parse_header
