@@ -3,7 +3,7 @@
 Parses the raw .FEC files using (a slightly improved version of) the NYT's csv sources files.
 
 ## Installation
-We recommend virtualenv and virtualenvwrapper.
+We recommend [virtualenv](https://virtualenv.pypa.io/en/latest/) and [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/).
 
 ```
 git clone git@github.com:jsfenfen/paper_fec.git && cd paper_fec
