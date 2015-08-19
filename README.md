@@ -30,4 +30,3 @@ python -m helpers.download_old_fec_filings --start=20150815 --end=20150819
 
 ## Todos
 * Make the [newly created sources repo](https://github.com/dwillis/fech-sources) a requirement (it is currently included).
-* Extend `read_FEC_demo` to read anything in the unzipped sources folder, maybe?
