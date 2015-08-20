@@ -19,7 +19,7 @@ python -m examples.read_FEC_demo
 ```
 
 ## Get more files
-This tool includes a utility for downloading old daily filing ZIPs.
+This repo includes a utility for downloading old daily filing ZIPs.
 
 ```python -m helpers.download_old_fec_filings --help```
 
