@@ -9,10 +9,11 @@ git clone git@github.com:jsfenfen/paper_fec.git && cd paper_fec
 mkvirtualenv paper_fec
 add2virtualenv .
 pip install -r requirements.txt
-cp parsing/local_FEC_settings.py-example parsing/local_FEC_settings.py
 ```
 
+
 ## Run the demo
+This parses all the files in the FILECACHE_DIRECTORY specified in parsing.read_FEC_settings.py. This repo should include at least one file in the default location. 
 ```
 python -m examples.read_FEC_demo
 ```
@@ -25,7 +26,7 @@ This tool includes a utility for downloading old daily filing ZIPs.
 To download filings for August 15 - August 19 of 2015, use this command.
 
 ```
-python -m helpers.download_old_fec_filings --start=20150815 --end=20150819
+python -m helpers.download_old_fec_filings --start=20150815 --end=20150820
 ```
 
 ## Todos

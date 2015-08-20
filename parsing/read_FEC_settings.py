@@ -1,3 +1,5 @@
+import os
+
 # [JACOB I WOULD LIKE THINGS LIKE THIS TO BE IN THE ENV, I THINK?]
 # [STILL MAKING UP MY MIND ABOUT IT.]
 ## This is only used in the download_old_fec_filings helper script in this repo
@@ -25,9 +27,44 @@ DELAY_TIME=2
 
 LOG_NAME = 'fecparsing.log'
 
-# Load any system-specific settings from the FEC_local_settings.py.
+# For the scraper.
+USER_AGENT = "paper FEC (0.0.1)"
+DELAY_TIME = 1
+
+#### Filesystem specifics
+
+# The project root directory.
+ARCHIVE_DIR_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+# For local temp files.
+FILECACHE_DIRECTORY = ARCHIVE_DIR_ROOT + '/data/fec_filings'
+PAPER_FILECACHE_DIRECTORY = ARCHIVE_DIR_ROOT + '/paper_data/fec_filings'
+
+# For downloading / unzipping FEC bundles.
+ZIP_DIRECTORY = ARCHIVE_DIR_ROOT + '/data/zipped_fec_filings'
+PAPER_ZIP_DIRECTORY = ARCHIVE_DIR_ROOT + '/paper_data/zipped_fec_filings'
+
+# For JSON output.
+JSON_DIRECTORY = ARCHIVE_DIR_ROOT + '/data/json'
+PAPER_JSON_DIRECTORY = ARCHIVE_DIR_ROOT + '/paper_data/json'
+
+
+LOG_DIRECTORY = ARCHIVE_DIR_ROOT + "/log"
+
+# Updated CSVs from Fech.
+CSV_FILE_DIRECTORY = ARCHIVE_DIR_ROOT + '/parsing/sourcesalt'
+PAPER_CSV_FILE_DIRECTORY = ARCHIVE_DIR_ROOT + '/parsing/paper_sources'
+
+# Create directories that do not exist.
+for directory in [ARCHIVE_DIR_ROOT,FILECACHE_DIRECTORY,PAPER_FILECACHE_DIRECTORY,ZIP_DIRECTORY,PAPER_ZIP_DIRECTORY,JSON_DIRECTORY,PAPER_JSON_DIRECTORY,LOG_DIRECTORY,CSV_FILE_DIRECTORY,PAPER_CSV_FILE_DIRECTORY]:
+    if not os.path.isdir(directory):
+        os.system('mkdir -p %s' % directory)
+
+
+
+# Override any system-specific settings with FEC_local_settings.py.
 try:
     from FEC_local_settings import *
 except Exception, e:
-    print "Exception in local settings: %s" % (e)
+    # nothing is required now, so just ignore.
     pass
