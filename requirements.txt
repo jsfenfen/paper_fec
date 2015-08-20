@@ -2,3 +2,6 @@ python-dateutil
 
 # for dump_filing_details.py helper
 requests
+
+# for the demo django app
+Django==1.8.4
