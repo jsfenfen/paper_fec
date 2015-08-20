@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 
 ## Run the demo
-This parses all the files in the FILECACHE_DIRECTORY specified in parsing.read_FEC_settings.py. This repo should include at least one file in the default location. 
+This parses all the files in the FILECACHE_DIRECTORY specified in parsing/read_FEC_settings.py. This repo should include at least one file in the default location. 
 ```
 python -m examples.read_FEC_demo
 ```
