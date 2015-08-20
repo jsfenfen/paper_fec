@@ -201,7 +201,10 @@ class Filing(models.Model):
     cycle = models.CharField(max_length=4, blank=True, null=True, help_text="The even-numbered year that ends a two-year cycle.")
     fec_id = models.CharField(max_length=9, null=True, blank=True, help_text="The FEC id of the committee filing this report")
     committee_name = models.CharField(max_length=200, null=True, blank=True, help_text="The committee's name as reported to the FEC")
-    filing_number = models.IntegerField(primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
+    #### FILING NUMBER IS NOT NUMERIC BECAUSE PAPER FILING NUMBERS BEGIN WITH A P
+    # filing_number = models.IntegerField(primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
+    filing_number = models.CharField(max_length=15, primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
+    
     form_type = models.CharField(max_length=7, null=True, blank=True, help_text="The type of form used.")
     filed_date = models.DateField(null=True, blank=True, help_text="The date that this filing was processed")
     coverage_from_date = models.DateField(null=True, blank=True, help_text="The start of the reporting period that this filing covers. Not all forms list this.")
@@ -283,7 +286,7 @@ class SkedA(models.Model):
     """
     # additional fields 
     line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
-    filing_number = models.IntegerField()
+    filing_number = models.CharField(max_length=15)
     superseded_by_amendment = models.BooleanField(default=False)
 
     # from the model
@@ -343,7 +346,7 @@ class SkedA(models.Model):
 class SkedB(models.Model):
     # additional fields 
     line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
-    filing_number = models.IntegerField()
+    filing_number = models.CharField(max_length=15)
     superseded_by_amendment = models.BooleanField(default=False)
 
     # from the field
@@ -403,7 +406,7 @@ class SkedB(models.Model):
 class SkedE(models.Model):
     # additional fields 
     line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
-    filing_number = models.IntegerField()
+    filing_number = models.CharField(max_length=15)
     # can be superseded by amendment or by later filing
     superseded_by_amendment = models.BooleanField(default=False)
 
@@ -473,7 +476,7 @@ class SkedE(models.Model):
 class OtherLine(models.Model):
     # additional fields 
     line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
-    filing_number = models.IntegerField()
+    filing_number = models.CharField(max_length=15)
     superseded_by_amendment = models.BooleanField(default=False)
 
     # Standardized name of the parser we use to process it.
