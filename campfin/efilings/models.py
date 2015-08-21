@@ -2,68 +2,69 @@ from django.db import models
 
 class Candidate(models.Model):
     ## This is the human verified field -- see legislators.models.incumbent_challenger
+    slug = models.SlugField(null=True)
+    cycle = models.CharField(max_length=4, blank=True, null=True, help_text="text cycle; even number.")
+    
+    
+    ### SEMI-CURATED FIELDS, THAT COULD BE SET BY SCRIPT. YOU PROBABLY WANT TO LOSE THESE
     is_incumbent = models.BooleanField(default=False,help_text="Are they an incumbent? If not, they are a challenger")
     curated_election_year =  models.IntegerField(null=True, help_text="What year is their next election. Set this field--don't overwrite the fec's election year. ")
     display = models.BooleanField(default=False,help_text="Should they be displayed. Use this = False for off cycle candidates.")
-    
-    # foreign key to district
-    # district = models.ForeignKey('District', null=True, help_text="Presidents have no district")
-
-    cycle = models.CharField(max_length=4, blank=True, null=True, help_text="text cycle; even number.")
-
+    display_name = models.CharField(max_length=255, null=True, help_text="FEC often has wrong name")
     not_seeking_reelection = models.BooleanField(default=False,help_text="True if they are an incumbent who is not seeking reelection.")
     other_office_sought = models.CharField(max_length=127, blank=True, null=True, help_text="E.g. are they running for senate?")
     other_fec_id = models.CharField(max_length=9, blank=True, null=True, help_text="If they've declared for another federal position, what is it? This should be the *candidate id* not a committee id. ")
-    name = models.CharField(max_length=255, blank=True, null=True, help_text="Incumbent name")
-    pty = models.CharField(max_length=3, blank=True, null=True, help_text="What party is the incumbent?")
+    term_class = models.IntegerField(blank=True, null=True, help_text="1,2 or 3. Set this from US Congress repo or soemthing. Only applies to senators.")
+    
+    
+    #### FEC DATA
+    name = models.CharField(max_length=255, blank=True, null=True, help_text="name")
+    pty = models.CharField(max_length=3, blank=True, null=True, help_text="What party?")
     party = models.CharField(max_length=1, blank=True, null=True, help_text="Simplified party")
     fec_id = models.CharField(max_length=9, blank=True, null=True, help_text="FEC candidate id")
     pcc = models.CharField(max_length=9, blank=True, null=True, help_text="FEC id for the candidate's primary campaign committee")
-    
-    # This is displayed--this needs to be maintained.
     election_year = models.PositiveIntegerField(blank=True, null=True, help_text="Year of general election")
     state = models.CharField(max_length=2, blank=True, null=True, help_text="US for president")
     office = models.CharField(max_length=1, null=True,
                               choices=(('H', 'House'), ('S', 'Senate'), ('P', 'President'))
                               )
     office_district = models.CharField(max_length=2, blank=True, null=True, help_text="'00' for at-large congress; null for senate, president")
-    term_class = models.IntegerField(blank=True, null=True, help_text="1,2 or 3. Pulled from US Congress repo. Only applies to senators.")
-    # cand_ici comes from the candidate master file, but is basically not accurate.
-    # cand_ici = models.CharField(max_length=1, null=True, choices=(('I','Incumbent'), ('C', 'Challenger'), ('O', 'Open Seat')))
+    fec_data_update_time = models.DateTimeField(null=True, blank=True, help_text="When was this last set?")
+    #### END FEC DATA 
     
     
-    
-    # add on id fields
+    ##### ID FIELDS -- ADD MORE! 
     crp_id = models.CharField(max_length=9, blank=True, null=True)
     transparencydata_id = models.CharField(max_length=40, default='', null=True)
-
-    #
-
-    slug = models.SlugField()
     
-    # independent expenditures data
+    ###### IE TOTALS FOR OR AGAINST THIS CANDIDATE
     total_expenditures = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     expenditures_supporting = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     expenditures_opposing = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     # need to add electioneering here:
     electioneering = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
+    ie_update_time = models.DateTimeField(null=True, blank=True, help_text="When were ie totals last updated?")
+    #### END IE TOTALS
     
+    
+    ###### CANDIDATE TOTALS
+    # from the sum of all authorized committees -- one might also do something that includes leadership pacs.
      # total receipts
     total_receipts = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     total_contributions = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     total_disbursements = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     outstanding_loans = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True, default=0)
-
     # total unitemized receipts
     total_unitemized = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
-
     cash_on_hand = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
-    cash_on_hand_date = models.DateField(null=True)
+    as_of_date = models.DateField(null=True, help_text="When are the totals as of? This is slightly dicey because it's theoretically possible that there could be different filing deadlines, but in practice this almost never happens.")
+    candidate_total_update_time = models.DateTimeField(null=True, blank=True, help_text="When were candidate totals last updated?")
+    ##### END CANDIDATE TOTALS
     
-    ## these two are currently not populated
-    cand_cand_contrib = models.DecimalField(max_digits=19, decimal_places=2, null=True, help_text="contributions from the candidate herself")
-    cand_cand_loans = models.DecimalField(max_digits=19, decimal_places=2, null=True, help_text="loans from the candidate herself")
-        
+    # Setting this whenever a filing lands allows one to select which candidates need totals updated, rather than running all of them... 
+    is_dirty = models.NullBooleanField(null=True, default=True, help_text="Do summary numbers need to be recomputed?")    
+    
+    
 
     class Meta:
         unique_together = ('fec_id', 'cycle')
@@ -71,72 +72,17 @@ class Candidate(models.Model):
 
 class Committee(models.Model):
     cycle = models.CharField(max_length=4)
-    term_class = models.IntegerField(blank=True, null=True, help_text="1,2 or 3. Pulled from US Congress repo. Only applies to PCC of senators.")
+    slug = models.SlugField(max_length=255) 
+    
+    
+    ###### MAYBE CURATED FIELDS / SOME SET BY SCRIPT / SOME USELESS TO YOU
     is_paper_filer = models.NullBooleanField(null=True, default=False, help_text="True for most senate committees, also NRSC/DSCC, some others.")    
     curated_candidate = models.ForeignKey('Candidate', related_name='related_candidate', null=True, help_text="For house and senate: Only include if it's a P-primary campaign committee or A-authorized campaign committee with the current cycle as appears in the candidate-committee-linkage file. Check this by hand for presidential candidates though, because many committees claim to be authorized by aren't")
-    leadership_pac_leader = models.ForeignKey('Candidate', related_name='leadership_candidate', null=True, help_text="If this is a leadership pac with a candidate affilate, put the candidate here.")
-
-    is_dirty = models.NullBooleanField(null=True, default=True, help_text="Do summary numbers need to be recomputed?")    
-
-
-    # direct from the raw fec table
-    name = models.CharField(max_length=255, help_text="The committee name.")
-    display_name = models.CharField(max_length=255, null=True)
-    fec_id = models.CharField(max_length=9, blank=True, help_text="The FEC id of the filing committee")
-    slug = models.SlugField(max_length=255)
-    party = models.CharField(max_length=3, blank=True, null=True)
-    treasurer = models.CharField(max_length=200, blank=True, null=True)
-    street_1 = models.CharField(max_length=34, blank=True, null=True)
-    street_2 = models.CharField(max_length=34, blank=True, null=True)
-    city =models.CharField(max_length=30, blank=True, null=True)
-    zip_code = models.CharField(max_length=9, blank=True, null=True)
-    state = models.CharField(max_length=2, blank=True, null=True, help_text='the state where the pac mailing address is')
-    connected_org_name=models.CharField(max_length=200, blank=True, null=True)
-    filing_frequency = models.CharField(max_length=1, blank=True, null=True)
-
-    candidate_id = models.CharField(max_length=9,blank=True, null=True)
-    candidate_office = models.CharField(max_length=1, blank=True, null=True, help_text="The office of the candidate that this committee supports. Not all committees support candidates.")    
-
-
-    has_contributions = models.NullBooleanField(null=True, default=False)
-    # total receipts
-    total_receipts = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Total receipts for this committee ceived during the entire cycle. ")
-    total_contributions = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
-    total_disbursements = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Total disbursements by this committee ceived during the entire cycle")
-
-    outstanding_loans = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True, default=0, help_text="Total outstanding loans as of the cash_on_hand_date")
-
-    # total unitemized receipts
-    total_unitemized = models.DecimalField(max_digits=19, decimal_places=2, null=True)
-
-    cash_on_hand = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Cash on hand as of the end of committee's most recent periodic report; this date appears as cash_on_hand_date")
-    cash_on_hand_date = models.DateField(null=True, help_text="The end of the most recent periodic filing; the date that the cash on hand was reported as of.")
-
-    # independent expenditures
-    has_independent_expenditures = models.NullBooleanField(null=True, default=False)
-    total_independent_expenditures = models.DecimalField(max_digits=19, decimal_places=2, null=True, help_text="Total independent expenditures made this cycle.")
-    ie_support_dems = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to support Democratic candidates")
-    ie_oppose_dems = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to oppose Democratic candidates")
-    ie_support_reps = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to support Republican candidates")
-    ie_oppose_reps = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to oppose Republican candidates")
-    total_presidential_indy_expenditures = models.DecimalField(max_digits=19, decimal_places=2, null=True)
-
-    # Typically only party committees make coordinated expenditures
-    # has_coordinated_expenditures = models.NullBooleanField(null=True, default=False)
-    # total_coordinated_expenditures = models.DecimalField(max_digits=19, decimal_places=2, null=True)
-
-    # has_electioneering = models.NullBooleanField(null=True, default=False)
-    # total_electioneering = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
-
-      ## new
-
-    # what kinda pac is it? 
-    # is_superpac = models.NullBooleanField(null=True, default=False)    
-    # is_hybrid = models.NullBooleanField(null=True, default=False)  
-    # is_noncommittee = models.NullBooleanField(null=True, default=False)
-
+    leadership_pac_candidate = models.ForeignKey('Candidate', related_name='leadership_candidate', null=True, help_text="If this is a leadership pac with a candidate affilate, put the candidate here.")
+    leadership_pac_leader = models.CharField(max_length=200, blank=True, null=True, help_text="Leadership pacs are often affiliated with someone who's not a candidate (yet), and maybe never will be. Put their name as text here.")
     
-    # This needs to be curated to be worthwhile. 
+    # This needs to be curated to be worthwhile--FEC records don't specify this, but it's interesting. 
+    # Would only apply to ctype=I -- non-committee filers.
     org_status = models.CharField(max_length=31,
         choices=(('501(c)(4)', '501(c)(4)'),
                  ('501(c)(5)', '501(c)(5)'),
@@ -149,14 +95,33 @@ class Committee(models.Model):
         ),
         blank=True, null=True, help_text="We're only tracking these for non-committees")
 
-    # what's their orientation
-    political_orientation = models.CharField(max_length=1,null=True, help_text="The political orientation of the group, as coded by administrators. This is only added for groups making independent expenditures.", choices=[
+    # what's their orientation? Sunlight maintained this on outside spenders only, which was helpful for looking at overall picture of outside spending, esp if the non-profit status is maintained. 
+    political_orientation = models.CharField(max_length=1,null=True, help_text="The political orientation of the group, as coded by administrators. ", choices=[
                         ('R', 'backs Republicans'),
                         ('D', 'backs Democrats'),
                         ('U', 'unknown'),
                           ])
     political_orientation_verified = models.BooleanField(default=False, help_text="Check this box if the political orientation has been verified by a human")
+    
+    
+    is_dirty = models.NullBooleanField(null=True, default=True, help_text="Do summary numbers need to be recomputed?")    
 
+
+    # direct from the raw fec table
+    name = models.CharField(max_length=255, help_text="The committee name.")
+    fec_id = models.CharField(max_length=9, blank=True, help_text="The FEC id of the filing committee")
+    party = models.CharField(max_length=3, blank=True, null=True)
+    treasurer = models.CharField(max_length=200, blank=True, null=True)
+    street_1 = models.CharField(max_length=34, blank=True, null=True)
+    street_2 = models.CharField(max_length=34, blank=True, null=True)
+    city =models.CharField(max_length=30, blank=True, null=True)
+    zip_code = models.CharField(max_length=9, blank=True, null=True)
+    state = models.CharField(max_length=2, blank=True, null=True, help_text='the state where the pac mailing address is')
+    connected_org_name=models.CharField(max_length=200, blank=True, null=True)
+    filing_frequency = models.CharField(max_length=1, blank=True, null=True)
+
+    candidate_id = models.CharField(max_length=9,blank=True, null=True)
+    candidate_office = models.CharField(max_length=1, blank=True, null=True, help_text="The office of the candidate that this committee supports. Not all committees support candidates.")
     designation = models.CharField(max_length=1,
                                   blank=False,
                                   null=True,
@@ -188,58 +153,89 @@ class Committee(models.Model):
                                    ('X', 'Non-Qualified Party'),
                                    ('Y', 'Qualified Party'),
                                    ('Z', 'National Party Organization') ])  
+      
+    fec_data_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
+
+    ####### COMMITTEE SUMS
+    # total receipts
+    total_receipts = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Total receipts for this committee ceived during the entire cycle. ")
+    total_contributions = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
+    total_disbursements = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Total disbursements by this committee ceived during the entire cycle")
+    outstanding_loans = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True, default=0, help_text="Total outstanding loans as of the cash_on_hand_date")
+    # total unitemized receipts
+    total_unitemized = models.DecimalField(max_digits=19, decimal_places=2, null=True)
+    cash_on_hand = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Cash on hand as of the end of committee's most recent periodic report; this date appears as cash_on_hand_date")
+    cash_on_hand_date = models.DateField(null=True, help_text="The end of the most recent periodic filing; the date that the cash on hand was reported as of.")
+    committee_sum_update_time = models.DateTimeField(null=True, help_text="When were totals from FEC about candidate last updated")
+    committee_sum_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
+    ###### END COMMITTEE SUMS
+
+    ##### IE SUMS 
+    has_independent_expenditures = models.NullBooleanField(null=True, default=False)
+    total_independent_expenditures = models.DecimalField(max_digits=19, decimal_places=2, null=True, help_text="Total independent expenditures made this cycle.")
+    ie_support_dems = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to support Democratic candidates")
+    ie_oppose_dems = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to oppose Democratic candidates")
+    ie_support_reps = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to support Republican candidates")
+    ie_oppose_reps = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures make to oppose Republican candidates")
+    tot_pres_ind_exp = models.DecimalField(max_digits=19, decimal_places=2, null=True)
+    ie_sum_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
+    ###### END IE SUMS
+
+
 
     class Meta:
         unique_together = (("cycle", "fec_id"),)
-        ordering = ('-total_indy_expenditures', )
 
 
 class Filing(models.Model):
     """
     There's no foreign key to a committee or candidate here. You could have one, of course. 
+    I'm assuming that somewhere you have the candidate-committee linkage file downloaded regularly
+    and can reference that as needed. 
     """
     cycle = models.CharField(max_length=4, blank=True, null=True, help_text="The even-numbered year that ends a two-year cycle.")
     fec_id = models.CharField(max_length=9, null=True, blank=True, help_text="The FEC id of the committee filing this report")
-    committee_name = models.CharField(max_length=200, null=True, blank=True, help_text="The committee's name as reported to the FEC")
     #### FILING NUMBER IS NOT NUMERIC BECAUSE PAPER FILING NUMBERS BEGIN WITH A P
     # filing_number = models.IntegerField(primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
-    filing_number = models.CharField(max_length=15, primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
+    filing_number = models.CharField(max_length=15, primary_key=True, unique=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
     
     form_type = models.CharField(max_length=7, null=True, blank=True, help_text="The type of form used.")
     filed_date = models.DateField(null=True, blank=True, help_text="The date that this filing was processed")
     coverage_from_date = models.DateField(null=True, blank=True, help_text="The start of the reporting period that this filing covers. Not all forms list this.")
     coverage_to_date = models.DateField(null=True, blank=True, help_text="The end of the reporting period that this filing covers. Not all forms include this")
     process_time = models.DateTimeField(null=True, blank=True, help_text="This is the time that FEC processed the filing")
-    # is_superpac = models.NullBooleanField(help_text="Is this group a super PAC?")
     
-    # populate from committee_master file. Helpful to have this here; a foreign key to committee might be missing.
+    # Denormalized committee data--because the filings table is hit *a lot*.
+    
+    committee_name = models.CharField(max_length=200, null=True, blank=True, help_text="The committee's name as reported to the FEC")
     committee_designation = models.CharField(max_length=1, null=True, blank=True, help_text="See the FEC's committee designations")
     committee_type = models.CharField(max_length=1, null=True, blank=True, help_text="See the FEC's committee types")
     committee_slug = models.SlugField(max_length=255, null=True, blank=True)
     party = models.CharField(max_length=3, blank=True, null=True)
     
     
-    
-    ### processing status flags
-    filing_is_downloaded = models.NullBooleanField(default=False)
-    header_is_processed = models.NullBooleanField(default=False)
-    previous_amendments_processed = models.NullBooleanField(default=False)
-    new_filing_details_set = models.NullBooleanField(default=False)
-    data_is_processed = models.NullBooleanField(default=False)
-    body_rows_superseded = models.NullBooleanField(default=False)
-    ie_rows_processed = models.NullBooleanField(default=False)
-    
+    ###############STATUS TRACKING FIELDS
+    ### May want to finesse these; 0 = not done, 1 = done, E = error; add codes as needed.
+    ### May also want to time stamp these to track efficiency. 
+    ### Also consider moving this to mongo or elsewhere if to0 many writes are required.
+    filing_is_downloaded = models.CharField(max_length=1, default="0")
+    header_is_processed = models.CharField(max_length=1, default="0")
+    previous_amendments_processed = models.CharField(max_length=1, default="0")
+    new_filing_details_set = models.CharField(max_length=1, default="0")
+    data_is_processed = models.CharField(max_length=1, default="0")
+    body_rows_superseded = models.CharField(max_length=1, default="0")
+    ie_rows_processed = models.CharField(max_length=1, default="0")
     filing_error = models.NullBooleanField(default=False)
-    filing_error_message = models.TextField(null=True, blank=True, "What is the blocking error message")
+    filing_error_message = models.TextField(null=True, blank=True, help_text="What is the blocking error message")
+    #################END STATUS TRACKING FIELDS.
     
-    ### summary data only available after form is parsed:
+    ############ summary data only available after form is parsed:
     
     # populated for periodic reports only
     coh_start = models.DecimalField(max_digits=14, decimal_places=2, null=True, help_text="The cash on hand at the start of the reporting period. Not recorded on all forms.")
     coh_end = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The cash on hand at the end of the reporting period. ")
     # Did they borrow *new* money this period ? 
     new_loans = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The amount of new loans taken on by the committee during this reporting period.")
-    
     # if applicable:
     tot_raised = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount raised in this report. This is total receipts for periodic reports.")
     tot_spent = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount spent in this report.")
@@ -247,35 +243,32 @@ class Filing(models.Model):
     tot_ies = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures ")
     tot_coordinated = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0)
     
-    # which filing types are contained? Store as a dict. 
-    # lines_present =  DictionaryField(db_index=True, null=True, help_text="A dictionary of the type of lines present in this report by schedule. ")
+    # Useful to track this stuff generally... 
+    skeda_linecount = models.IntegerField(null=True, blank=True)
+    skedb_linecount = models.IntegerField(null=True, blank=True)
+    skedc_linecount = models.IntegerField(null=True, blank=True) # not really supported yet
+    skedd_linecount = models.IntegerField(null=True, blank=True) # ditto
+    skede_linecount = models.IntegerField(null=True, blank=True)
+    skedo_linecount = models.IntegerField(null=True, blank=True) # a count of 'other' lines. 
     
-    
-    ## Models migrated from old form_header model
-
-    # header_data = DictionaryField(db_index=False, null=True)
-    
+    ####### AMENDMENTS ETC
     # does this supersede another an filing?
     is_amendment=models.BooleanField()
     # if so, what's the original?
     amends_filing=models.IntegerField(null=True, blank=True)
     amendment_number = models.IntegerField(null=True, blank=True)
-    
     # Is this filing superseded by another filing, either a later amendment, or a periodic filing.
     superseded_by_amendment=models.BooleanField(default=False, help_text="Is this filing superseded by another filing, either a later amendment, or a periodic filing")
     # which filing is this one superseded by? 
     amended_by=models.IntegerField(null=True, blank=True)
-    
     # Is this a 24- or 48- hour notice that is now covered by a periodic (monthly/quarterly) filing, and if so, is ignorable ? 
     covered_by_periodic_filing=models.BooleanField(default=False)
-    covered_by=models.IntegerField(null=True, blank=True)
-    
+    covered_by=models.IntegerField(null=True, blank=True)    
     
     # F5's can be monthly/quarterly or immediate. We need to keep track of which kind is which so we can supersede them. The filers sometimes fuck their filings up pretty substantially though, so this might not be advisable. 
     is_f5_quarterly=models.BooleanField(default=False)
     
-    class Meta:
-        unique = ('filing_number')
+
 
 
 # field sizes are based on v8.0 specs, generally
@@ -285,7 +278,7 @@ class SkedA(models.Model):
     Nor there is there a unique_together for filing_number and transaction_id (though these are unique)
     """
     # additional fields 
-    line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
+    line_sequence = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
     filing_number = models.CharField(max_length=15)
     superseded_by_amendment = models.BooleanField(default=False)
 
@@ -345,7 +338,7 @@ class SkedA(models.Model):
 
 class SkedB(models.Model):
     # additional fields 
-    line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
+    line_sequence = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
     filing_number = models.CharField(max_length=15)
     superseded_by_amendment = models.BooleanField(default=False)
 
@@ -405,13 +398,13 @@ class SkedB(models.Model):
 
 class SkedE(models.Model):
     # additional fields 
-    line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
+    line_sequence = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
     filing_number = models.CharField(max_length=15)
     # can be superseded by amendment or by later filing
     superseded_by_amendment = models.BooleanField(default=False)
 
     ## Data added fields. Party isn't part of the original data, so...
-    candidate_targeted = models.ForeignKey('Candidate', null=True, "The candidate targeted by this independent expenditure.")
+    candidate_targeted = models.ForeignKey('Candidate', null=True, help_text="The candidate targeted by this independent expenditure.")
     
     effective_date = models.DateField(null=True, help_text="What date should we use? Through version 8.0 of FECfile, there was only an 'expenditure date', but beginning with v8.1 there were two dates--a dissemination date and an expenditure date. For v8.1 use the dissemination date; for earlier version use the expenditure date.")
 
@@ -475,7 +468,7 @@ class SkedE(models.Model):
 
 class OtherLine(models.Model):
     # additional fields 
-    line_number = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
+    line_sequence = models.IntegerField() # The line number that this filing appears in--it's useful to maintain the original order for memo fields like 'see below'
     filing_number = models.CharField(max_length=15)
     superseded_by_amendment = models.BooleanField(default=False)
 
@@ -488,4 +481,4 @@ class OtherLine(models.Model):
     transaction_id  = models.CharField(max_length=20, blank=True, null=True)
 
     # Store all other line data as a dict:
-    line_data =  models.TextField(null=True) # maybe pickle the dictionary and store it here? 
+    line_data =  models.TextField(null=True) # maybe pickle the dictionary and store it here as text?

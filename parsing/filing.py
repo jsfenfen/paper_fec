@@ -3,7 +3,7 @@ import csv
 
 from parsing.header_parser import parse_header
 from parsing.read_FEC_settings import FILECACHE_DIRECTORY, PAPER_FILECACHE_DIRECTORY
-from parsing.utils import utf8_clean, clean_entry
+from parsing.utils.parsing_utils import utf8_clean, clean_entry
 
 
 # Current FCC files are delimited by ascii 28.

@@ -9,7 +9,7 @@ We still maintain the HDR.csv file, but don't actually read from it.
 """
 
 import re
-from parsing.utils import clean_entry
+from parsing.utils.parsing_utils import clean_entry
 
 
 old_eheaders = ['record_type', 'ef_type', 'fec_version', 'soft_name', 'soft_ver', 'name_delim', 'report_id', 'report_number']

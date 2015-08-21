@@ -1,5 +1,8 @@
 python-dateutil
 
+# loading is married to postgres, hence
+psycopg2
+
 # for dump_filing_details.py helper
 requests
 

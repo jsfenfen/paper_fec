@@ -7,7 +7,7 @@ import csv
 import re
 
 from parsing.read_FEC_settings import CSV_FILE_DIRECTORY, PAPER_CSV_FILE_DIRECTORY
-from parsing.utils import clean_entry
+from parsing.utils.parsing_utils import clean_entry
 
 
 # [PEP8 _strongly_ prefers CapWords class names.]
