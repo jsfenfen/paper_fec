@@ -181,8 +181,8 @@ class Committee(models.Model):
     ie_sum_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
     ###### END IE SUMS
 
-
-
+    
+    
     class Meta:
         unique_together = (("cycle", "fec_id"),)
 
@@ -268,8 +268,15 @@ class Filing(models.Model):
     # F5's can be monthly/quarterly or immediate. We need to keep track of which kind is which so we can supersede them. The filers sometimes fuck their filings up pretty substantially though, so this might not be advisable. 
     is_f5_quarterly=models.BooleanField(default=False)
     
-
-
+    ##### HACK B/C OF NO HSTORES
+    ##### BECAUSE WE DON'T HAVE A DICTIONARY / JSON OBJECT AVAILABLE, JUST SAVE THE HEADER DICT AS TEXT
+    ##### THERE'S A BETTER APPROACH (FOREIGN KEY TO MONGO? BINARIZATION ? PROTOCOL BUFFERS ? 
+    ##### IS THERE A PICKLE OPERATION THAT DOESN'T FREAK OUT ABOUT QUOTE CHARS? OR MORE RESEARCH ON 
+    ##### WHETHER HAVING A QUOTE CHAR SOMEHOW WORKS (MY RECOLLECTION IS THAT IT DOESN'T))
+    #### IT'S POSSIBLE ONE DOESN'T REALLY WANT THIS DATA, BUT IT'S PRETTY DARN USEFUL.
+    form_line_data =  models.TextField(null=True) 
+    
+    
 
 # field sizes are based on v8.0 specs, generally
 class SkedA(models.Model):
@@ -480,5 +487,5 @@ class OtherLine(models.Model):
     filer_committee_id_number = models.CharField(max_length=9, blank=True, null=True)
     transaction_id  = models.CharField(max_length=20, blank=True, null=True)
 
-    # Store all other line data as a dict:
-    line_data =  models.TextField(null=True) # maybe pickle the dictionary and store it here as text?
+    # Store all other line data as a python stringified dict. pickling wasn't working out. 
+    line_data =  models.TextField(null=True) #
