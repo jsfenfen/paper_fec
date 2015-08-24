@@ -1,5 +1,3 @@
-* this is a historic document describing realtime fec, included here for reference only. Some details may have changed in paper_fec.* 
-
 <style>
 table:nth-of-type(1) {
     display:table;
@@ -9,6 +7,8 @@ table:nth-of-type(1) th:nth-of-type(4) {
     width:50%;
 }
 </style>
+
+* this is a historic document describing realtime fec, included here for reference only. Some details may have changed in paper_fec.* 
 
 ### Processing flags on new_filing  
 
