@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+from django_hstore import hstore
 
 class Update_Time(models.Model):
   key = models.SlugField()
@@ -289,7 +290,12 @@ class Filing(models.Model):
     ##### IS THERE A PICKLE OPERATION THAT DOESN'T FREAK OUT ABOUT QUOTE CHARS? OR MORE RESEARCH ON 
     ##### WHETHER HAVING A QUOTE CHAR SOMEHOW WORKS (MY RECOLLECTION IS THAT IT DOESN'T))
     #### IT'S POSSIBLE ONE DOESN'T REALLY WANT THIS DATA, BUT IT'S PRETTY DARN USEFUL.
-    form_line_data =  models.TextField(null=True) 
+    # form_line_data =  models.TextField(null=True) 
+    
+    #### SWITCHING THE ABOVE BACK TO HSTORE
+    form_line_dict = hstore.SerializedDictionaryField(null=True, help_text="Dictionary field of the raw form line.")
+    
+    objects = hstore.HStoreManager()
     
     
 
@@ -503,4 +509,9 @@ class OtherLine(models.Model):
     transaction_id  = models.CharField(max_length=20, blank=True, null=True)
 
     # Store all other line data as a python stringified dict. pickling wasn't working out. 
-    line_data =  models.TextField(null=True) #
+    # line_data =  models.TextField(null=True) #
+    
+    # Put all the line data in a dict here. 
+    line_dict = hstore.SerializedDictionaryField(null=True, help_text="Dictionary field of the raw form line.")
+    
+    objects = hstore.HStoreManager()

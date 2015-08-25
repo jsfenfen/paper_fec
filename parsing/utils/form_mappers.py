@@ -1,5 +1,7 @@
 from dateutil.parser import parse as dateparse
 
+from parsing.utils.hstore_helpers import dict_to_hstore
+
 # import cPickle as pickle
 
         
@@ -253,9 +255,9 @@ def otherline_from_line(data_dict, filing_number, line_sequence, is_amended, fil
     except KeyError:
         pass
     data_dict['superseded_by_amendment'] = is_amended
-    # saving the raw dictionary as a cpickled string complainst about quoting.
-    # for now just save as string. 
-    data_dict['line_data'] = str(data_dict)
+    # save all the raw data as line_dict, which'll go to an hstore field
+    # this treats all data as strings...  
+    data_dict['line_dict'] = dict_to_hstore(data_dict)
     data_dict['line_sequence'] = line_sequence
     data_dict['filing_number'] = filing_number
 
