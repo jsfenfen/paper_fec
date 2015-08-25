@@ -63,6 +63,6 @@ The next script is **set_new_filing_details** which sets the basic summary infor
 
 It's possible to combine these two scripts into one, but it's sometimes useful to track when form parsing breaks as opposed to when the business logic of attaching parsed form values to a few summary points is borked. 
 
-
+**mark_amended** finds previous filings that are superceded by new filings and marks them as amended. It also looks for other, earlier filings that amend the same filing (as the new filing amends)--which is how these things sometimes are reported. It runs on filings where previous_amendments_processed="0" and new_filing_details_set="1"; it sets previous_amendments_processed to "1" when it's done. Note that this doesn't mark the line items attached to each filing as having been amended--that takes place in a subsequent script. 
 
 
