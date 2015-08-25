@@ -211,6 +211,7 @@ class Filing(models.Model):
     # filing_number = models.IntegerField(primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
     filing_id = models.CharField(max_length=15, primary_key=True, unique=True, help_text="The alphanumeric filing number assigned to this electronic filing by the FEC")
     filing_number = models.IntegerField(help_text="The integer part of the filing number assigned to this electronic filing by the FEC", null=True)
+    filing_type = models.CharField(max_length=1, help_text="Filing type: E = electronic, P = paper, S = experimental senate filing", null=True)
     discovery_method = models.CharField(help_text=b'How did we detect the filing? : R=RSS, F=find_filings, Q=query, A=Archived daily filings -- add your own here...', max_length=1, null=True, blank=True)
     
     form_type = models.CharField(max_length=7, null=True, blank=True, help_text="The type of form used.")
