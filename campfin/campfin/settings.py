@@ -139,6 +139,10 @@ LOGGING = {
 
 STATIC_URL = '/static/'
 
+
+# what FEC cycles do we care about? 
+ACTIVE_CYCLES = ['2016']
+
 try:
     from local_settings import *
 except ImportError, exp:
