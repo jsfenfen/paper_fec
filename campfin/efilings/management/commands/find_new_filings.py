@@ -1,74 +1,66 @@
-# look for new filings by just testing filing numbers. This is a hack to deal with the fact that
-# the feed is too slow. 
+"""
+look for new filings by just testing filing numbers. This is a hack to deal with the fact that
+the feed is too slow. 
+"""
 
-import urllib2
+import urllib2, sys, logging
 from time import sleep
 from django.utils import timezone
-import pytz
-from datetime import date
 
 
 from django.core.management.base import BaseCommand, CommandError
-from fec_alerts.models import new_filing
-
-
-from parsing.read_FEC_settings import FILECACHE_DIRECTORY, FEC_DOWNLOAD
-### Need some mechanism for tracking when updates happen. 
-#from summary_data.utils.update_utils import set_update
 from django.conf import settings
 
+from efilings.models import Filing
+from efilings.utils.update_utils import set_update
 
-# FILING_SCRAPE_KEY = settings.FILING_SCRAPE_KEY
+# put the parsing directory stuff on the path -- needs more sane setup
+sys.path.append(settings.PARSING_DIR)
+from read_FEC_settings import FILECACHE_DIRECTORY, USER_AGENT, FEC_DOWNLOAD, DELAY_TIME, CYCLE
 
-est = pytz.timezone('US/Eastern')
 
-def get_date(datetime):
-    this_datetime = datetime.astimezone(est)
-    return date(this_datetime.year, this_datetime.month, this_datetime.day)
+
+logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
-    help = "Test if new electronic filings are available by trying to open a connection (without actually downloading the file). If the filing is available, download it in a subsequent step. This has the potential to skip filings if a lower numbered one is downloaded first. Therefore, it's useful to also hit the RSS feed for the same info in a separate script"
-    requires_model_validation = False
+    help = "Find files by incrementing the filing number."
+    requires_system_checks = False
     
     def handle(self, *args, **options):
         
+        logger.info('FIND_NEW_FILINGS - starting regular run')
         
-        highest_filing_number = new_filing.objects.all().order_by('-filing_number')[0].filing_number
-        print "highest previously available filing number: %s" % (highest_filing_number)
+        highest_filing_number = Filing.objects.all().order_by('-filing_number')[0].filing_number
+        logger.info("highest previously available filing number: %s" % (highest_filing_number))
         trial_file_number = highest_filing_number
         highest_available_file_number = highest_filing_number
         file_misses = 0
         file_miss_threshold = 3
+        new_files = 0
         
         while True:
             trial_file_number += 1 
             location = FEC_DOWNLOAD % (trial_file_number)
-            print location
             try:
                 result = urllib2.urlopen(location)
-                print "Found %s" % (location)
-                try:
-                    new_filing.objects.get(filing_number = trial_file_number)
-                except new_filing.DoesNotExist:
-                    now = timezone.now()
-                    thisobj = new_filing.objects.create(
-                                filing_number = trial_file_number, 
-                                process_time = now,
-                                filed_date = get_date(now))
+                logger.info("FIND_NEW_FILINGS: found new filing %s" % (location))
+                now = timezone.now()
+                obj, created = Filing.objects.get_or_create(filing_id=trial_file_number, filing_number=trial_file_number, filing_type="E", defaults = {'process_time':now, 'discovery_method':'F'})
+                if created:
+                    new_files += 1
                                 
 
             except urllib2.HTTPError:
-                print "didn't find %s" % (location)
+                logger.info("FIND_NEW_FILINGS: filing unavailable at %s" % (location))
                 file_misses += 1
                 
             if file_misses >= file_miss_threshold:
                 break
                 
             sleep(1)
+            logger.info("FIND_NEW_FILINGS - completing regular run--created %s new filings" % new_files)
         
         # set the update time. 
-        # set_update('scrape_electronic_filings')
-        
-        
-        
+        set_update('incremental_find_filings')
 

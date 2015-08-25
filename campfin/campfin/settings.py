@@ -15,6 +15,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+### HACK TO PUT THE PARSING STUFF ON THE PATH
+PARSING_DIR = os.path.dirname(BASE_DIR) + '/parsing'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -88,13 +90,46 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# This should be Eastern Time because FEC rules (and filing arrival times)
+# raises the possibility of AMBIGUOUS_TIME_ERROR 1x yearly
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+# http://stackoverflow.com/a/10784482
+# timezone.now() will use TIME_ZONE
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/campfin_load.log',
+            'formatter':'verbose',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s file:%(filename)s line:%(lineno)d "%(message)s"'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s file:%(filename)s line:%(lineno)d "%(message)s"'
+        },
+    },
+    'loggers': {
+        'efilings': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 
 # Static files (CSS, JavaScript, Images)

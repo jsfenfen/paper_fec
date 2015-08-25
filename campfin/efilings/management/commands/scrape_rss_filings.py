@@ -39,7 +39,7 @@ def enter_or_skip_filing(filing_number):
     """
     # Now is EDT, 
     now = timezone.now()
-    obj, created = Filing.objects.get_or_create(filing_number=filing_number, filing_type="E", defaults = {'process_time':now, 'discovery_method':'R'})
+    obj, created = Filing.objects.get_or_create(filing_id=filing_number, filing_number=filing_number, filing_type="E", defaults = {'process_time':now, 'discovery_method':'R'})
     return created
 
 def parse_xml_from_text(xml):

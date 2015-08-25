@@ -1,16 +1,23 @@
+import sys, os
+
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
-from parsing.form_parser import form_parser, ParserMissingError
-from parsing.filing import filing
-from parsing.read_FEC_settings import FILECACHE_DIRECTORY
+from efilings.models import Filing
 
-from fec_alerts.models import new_filing
+# Add parsing dir to path
+sys.path.append(settings.PARSING_DIR)
+# And parentdir, crap
+
+sys.path.append(os.path.dirname(settings.PARSING_DIR))
+
+from form_parser import form_parser, ParserMissingError
+from filing import filing
+from read_FEC_settings import FILECACHE_DIRECTORY
+
 
 #from formdata.models import Filing_Header
-from fec_alerts.utils.filing_processors import process_new_filing
-
-
-
+from efilings.utils.filing_processors import process_new_filing
 
 # load up a form parser
 fp = form_parser()
@@ -18,10 +25,10 @@ fp = form_parser()
 
 class Command(BaseCommand):
     help = "Enter file header from forms that have been downloaed; don't mark them as either amended or not."
-    requires_model_validation = False
+    requires_system_checks = False
 
     def handle(self, *args, **options):
-        downloaded_filings = new_filing.objects.filter(filing_is_downloaded=True, header_is_processed=False).order_by('filing_number')
+        downloaded_filings = Filing.objects.filter(filing_is_downloaded="1", header_is_processed="0").order_by('filing_number')
         for filing in downloaded_filings:
             print "Entering filing %s, entry_time %s" % (filing.filing_number, filing.process_time)
             result_header = None
