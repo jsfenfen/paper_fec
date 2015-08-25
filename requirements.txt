@@ -8,3 +8,10 @@ requests
 
 # for the demo django app
 Django==1.8.4
+
+# for parsing fec feed
+lxml
+
+
+## CLI requirements:
+# requires unzip installed to unarchive zipped fec daily files

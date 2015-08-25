@@ -1,4 +1,16 @@
 from django.db import models
+from django.utils import timezone
+
+
+class Update_Time(models.Model):
+  key = models.SlugField()
+  update_time = models.DateTimeField()
+
+  def save(self, *args, **kwargs):
+      ''' On save, update timestamps '''
+      self.update_time = timezone.now()
+      super(Update_Time, self).save(*args, **kwargs)
+
 
 class Candidate(models.Model):
     ## This is the human verified field -- see legislators.models.incumbent_challenger
@@ -198,12 +210,13 @@ class Filing(models.Model):
     #### FILING NUMBER IS NOT NUMERIC BECAUSE PAPER FILING NUMBERS BEGIN WITH A P
     # filing_number = models.IntegerField(primary_key=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
     filing_number = models.CharField(max_length=15, primary_key=True, unique=True, help_text="The numeric filing number assigned to this electronic filing by the FEC")
+    discovery_method = models.CharField(help_text=b'How did we detect the filing? : R=RSS, F=find_filings, Q=query, A=Archived daily filings -- add your own here...', max_length=1, null=True, blank=True)
     
     form_type = models.CharField(max_length=7, null=True, blank=True, help_text="The type of form used.")
     filed_date = models.DateField(null=True, blank=True, help_text="The date that this filing was processed")
     coverage_from_date = models.DateField(null=True, blank=True, help_text="The start of the reporting period that this filing covers. Not all forms list this.")
     coverage_to_date = models.DateField(null=True, blank=True, help_text="The end of the reporting period that this filing covers. Not all forms include this")
-    process_time = models.DateTimeField(null=True, blank=True, help_text="This is the time that FEC processed the filing")
+    process_time = models.DateTimeField(null=True, blank=True, help_text="This is the time that we first located the filing")
     
     # Denormalized committee data--because the filings table is hit *a lot*.
     
@@ -253,7 +266,7 @@ class Filing(models.Model):
     
     ####### AMENDMENTS ETC
     # does this supersede another an filing?
-    is_amendment=models.BooleanField()
+    is_amendment=models.NullBooleanField()
     # if so, what's the original?
     amends_filing=models.IntegerField(null=True, blank=True)
     amendment_number = models.IntegerField(null=True, blank=True)
