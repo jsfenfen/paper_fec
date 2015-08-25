@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from dateutil.parser import parse as dateparse
 from efilings.models import Filing
-# from summary_data.utils.party_reference import get_party_from_pty
 from ftpdata.models import Committee as FTP_Committee
 from efilings.models import Committee
 from django.conf import settings
@@ -192,7 +191,7 @@ def handle_filing(this_filing):
 
 class Command(BaseCommand):
     help = "Set data fields in the new filing from the parsed Filing_Header"
-    requires_model_validation = False
+    requires_system_checks = False
     
 
     def handle(self, *args, **options):
