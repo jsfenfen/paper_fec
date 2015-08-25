@@ -284,16 +284,9 @@ class Filing(models.Model):
     # F5's can be monthly/quarterly or immediate. We need to keep track of which kind is which so we can supersede them. The filers sometimes fuck their filings up pretty substantially though, so this might not be advisable. 
     is_f5_quarterly=models.BooleanField(default=False)
     
-    ##### HACK B/C OF NO HSTORES
-    ##### BECAUSE WE DON'T HAVE A DICTIONARY / JSON OBJECT AVAILABLE, JUST SAVE THE HEADER DICT AS TEXT
-    ##### THERE'S A BETTER APPROACH (FOREIGN KEY TO MONGO? BINARIZATION ? PROTOCOL BUFFERS ? 
-    ##### IS THERE A PICKLE OPERATION THAT DOESN'T FREAK OUT ABOUT QUOTE CHARS? OR MORE RESEARCH ON 
-    ##### WHETHER HAVING A QUOTE CHAR SOMEHOW WORKS (MY RECOLLECTION IS THAT IT DOESN'T))
-    #### IT'S POSSIBLE ONE DOESN'T REALLY WANT THIS DATA, BUT IT'S PRETTY DARN USEFUL.
-    # form_line_data =  models.TextField(null=True) 
     
     #### SWITCHING THE ABOVE BACK TO HSTORE
-    header_data = hstore.DictionaryField(null=True, help_text="Dictionary field of the raw form line.")
+    header_data = hstore.SerializedDictionaryField(null=True, help_text="Dictionary field of the raw form line.")
     
     objects = hstore.HStoreManager()
     
