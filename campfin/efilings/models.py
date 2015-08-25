@@ -293,7 +293,7 @@ class Filing(models.Model):
     # form_line_data =  models.TextField(null=True) 
     
     #### SWITCHING THE ABOVE BACK TO HSTORE
-    form_line_dict = hstore.SerializedDictionaryField(null=True, help_text="Dictionary field of the raw form line.")
+    header_data = hstore.DictionaryField(null=True, help_text="Dictionary field of the raw form line.")
     
     objects = hstore.HStoreManager()
     

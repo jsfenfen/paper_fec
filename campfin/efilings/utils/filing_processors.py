@@ -1,3 +1,4 @@
+import sys, logging
 from dateutil.parser import parse as dateparse
 
 from django.db import connection, transaction
@@ -7,17 +8,17 @@ from efilings.models import Filing
 # from fec_alerts.utils.form_mappers import *
 from utils.cycle_utils import get_cycle_from_date
 
+from django.conf import settings
 # Put parsing dir on path
 sys.path.append(settings.PARSING_DIR)
 from read_FEC_settings import FILECACHE_DIRECTORY, USER_AGENT, FEC_DOWNLOAD, DELAY_TIME
 
 from form_parser import form_parser, ParserMissingError
 from filing import filing
-from read_FEC_settings import FILECACHE_DIRECTORY
+
+logger = logging.getLogger(__name__)
 
 
-
-verbose = True
 cursor = connection.cursor()
 
 
@@ -48,8 +49,7 @@ def process_new_filing(thisnewfiling, fp=None, filing_time=None, filing_time_is_
 
     # only parse forms that we're set up to read
     if not fp.is_allowed_form(form):
-        if verbose:
-            print "Not a parseable form: %s - %s" % (form, thisnewfiling.filing_number)
+        logger.info("Not a parseable form: %s - %s" % (form, thisnewfiling.filing_number))
         
         if thisnewfiling.is_amendment:
             thisnewfiling.save()
@@ -74,8 +74,7 @@ def process_new_filing(thisnewfiling, fp=None, filing_time=None, filing_time_is_
             if from_date:
                 thisnewfiling.cycle = get_cycle_from_date(from_date)
     except KeyError:
-        print "problem with coverage_from_date"
-        pass
+        logger.debug("KeyError for coverage_from_date in %s" % thisnewfiling.filing_number)
         
     try:                
         if header_line['coverage_through_date']:
@@ -83,8 +82,7 @@ def process_new_filing(thisnewfiling, fp=None, filing_time=None, filing_time_is_
             if through_date:
                 thisnewfiling.cycle = get_cycle_from_date(through_date)
     except KeyError:
-        print "coverage_through_date"
-        pass
+        logger.debug("KeyError for coverage_through_date in %s" % thisnewfiling.filing_number)
 
     
     # Create the filing -- but don't mark it as being complete. 
@@ -98,8 +96,6 @@ def process_new_filing(thisnewfiling, fp=None, filing_time=None, filing_time_is_
     thisnewfiling.amendment_number = f1.headers['report_number'] or None
     thisnewfiling.header_data = header_line
     
-    print thisnewfiling.__dict__
-
     thisnewfiling.save()
     
     return True

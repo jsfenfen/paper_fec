@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_hstore',
     'efilings',
+    'ftpdata',
 )
 
 MIDDLEWARE_CLASSES = (
