@@ -65,4 +65,24 @@ It's possible to combine these two scripts into one, but it's sometimes useful t
 
 **mark_amended** finds previous filings that are superceded by new filings and marks them as amended. It also looks for other, earlier filings that amend the same filing (as the new filing amends)--which is how these things sometimes are reported. It runs on filings where previous_amendments_processed="0" and new_filing_details_set="1"; it sets previous_amendments_processed to "1" when it's done. Note that this doesn't mark the line items attached to each filing as having been amended--that takes place in a subsequent script. 
 
+### Processing of line itemizations
+
+It's probably useful to queue the line itemization entry process. An example of the line entry is given in examples/read_and_transform_FEC_demo.py. This part of the script should act on filings where data_is_processed is "0" and set it to "1" upon completion. 
+
+
+
+### Set values after line itemization is complete
+
+**mark_superceded_body_rows** mark the line item lines superceded
+
+**update_dirty_committees** reaggregate core committee totals (not IE's)
+
+**update_dirty_candidates** reaggregate core candidate totals (not IE's)
+
+
+**process_skede_lines** --> not implemented here
+
+--> supersede F5 non-quarterly w/ quarterly.
+--> supercede F6 w/ F3[X]
+--> supercede F24 w/ F3[X]
 
