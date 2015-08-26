@@ -259,13 +259,17 @@ class Filing(models.Model):
     tot_ies = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures ")
     tot_coordinated = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0)
     
+    #### SWITCHING THIS STUFF BACK TO HSTORE TOO
     # Useful to track this stuff generally... 
-    skeda_linecount = models.IntegerField(null=True, blank=True)
-    skedb_linecount = models.IntegerField(null=True, blank=True)
-    skedc_linecount = models.IntegerField(null=True, blank=True) # not really supported yet
-    skedd_linecount = models.IntegerField(null=True, blank=True) # ditto
-    skede_linecount = models.IntegerField(null=True, blank=True)
-    skedo_linecount = models.IntegerField(null=True, blank=True) # a count of 'other' lines. 
+    # skeda_linecount = models.IntegerField(null=True, blank=True)
+    # skedb_linecount = models.IntegerField(null=True, blank=True)
+    # skedc_linecount = models.IntegerField(null=True, blank=True) # not really supported yet
+    # skedd_linecount = models.IntegerField(null=True, blank=True) # ditto
+    # skede_linecount = models.IntegerField(null=True, blank=True)
+    # skedo_linecount = models.IntegerField(null=True, blank=True) # a count of 'other' lines. 
+    lines_present = hstore.SerializedDictionaryField(null=True, help_text="How many itemization lines are present of which type")
+    
+    
     
     ####### AMENDMENTS ETC
     # does this supersede another an filing?

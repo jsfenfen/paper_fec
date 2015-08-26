@@ -1,4 +1,11 @@
-# django independent entry process; no db abstraction; this is built for postgresql
+"""
+ This is a django-independent process to enter filing itemzations.
+ The intent is for this to be run from a queue outside of django. 
+ Because there's no database abstraction, there are a few db queries hardcoded
+ The db connection uses the django settings, (see db_utils) it just shouldn't
+ import all the django libraries.
+
+"""
 
 import sys, time
 
@@ -14,6 +21,9 @@ from parsing.utils.fec_import_logging import fec_logger
 
 from db_utils import get_connection
 verbose = True
+
+## THIS SHOULD LIVE SOMEWHERE ELSE
+CURRENT_CYCLE = '2016'
 
 class FilingHeaderDoesNotExist(Exception):
     pass
@@ -95,7 +105,7 @@ def process_filing_body(filingnum, fp=None, logger=None):
       
     connection = get_connection()
     cursor = connection.cursor()
-    cmd = "select fec_id, is_superceded, data_is_processed from fec_alerts_new_filing where filing_number=%s" % (filingnum)
+    cmd = "select fec_id, superseded_by_amendment, data_is_processed from efilings_filing where filing_number=%s" % (filingnum)
     cursor.execute(cmd)
     
     cd = CSV_dumper(connection)
@@ -110,8 +120,9 @@ def process_filing_body(filingnum, fp=None, logger=None):
     line_sequence = 1
     is_amended = result[1]
     is_already_processed = result[2]
-    if is_already_processed:
+    if is_already_processed == "1":
         msg = 'process_filing_body: This filing has already been entered.'
+        print msg
         logger.error(msg)
         raise FilingHeaderAlreadyProcessed(msg)
     
@@ -126,8 +137,8 @@ def process_filing_body(filingnum, fp=None, logger=None):
     if not fp.is_allowed_form(form):
         if verbose:
             msg = "process_filing_body: Not a parseable form: %s - %s" % (form, filingnum)
-            # print msg
-            logger.error(msg)
+            print msg
+            logger.info(msg)
         return None
         
     linenum = 0
@@ -145,6 +156,7 @@ def process_filing_body(filingnum, fp=None, logger=None):
             process_body_row(linedict, filingnum, line_sequence, is_amended, cd, filer_id)
         except ParserMissingError:
             msg = 'process_filing_body: Unknown line type in filing %s line %s: type=%s Skipping.' % (filingnum, linenum, row[0])
+            print msg
             logger.warn(msg)
             continue
         
@@ -157,39 +169,50 @@ def process_filing_body(filingnum, fp=None, logger=None):
         total_rows += counter[i]
         
     msg = "process_filing_body: Filing # %s Total rows: %s Tally is: %s" % (filingnum, total_rows, counter)
-    # print msg
+    print msg
     logger.info(msg)
     
+    ######## DIRECT DB UPDATES. PROBABLY A BETTER APPROACH, BUT... 
     
-    """
-    # this data has been moved here. At some point we should pick a single location for this data. 
     header_data = dict_to_hstore(counter)
-    cmd = "update fec_alerts_new_filing set lines_present='%s'::hstore where filing_number=%s" % (header_data, filingnum)
+    cmd = "update efilings_filing set lines_present='%s'::hstore where filing_number=%s" % (header_data, filingnum)
     cursor.execute(cmd)
     
     # mark file as having been entered. 
-    cmd = "update fec_alerts_new_filing set data_is_processed = True where filing_number=%s" % (filingnum)
+    cmd = "update efilings_filing set data_is_processed='1' where filing_number=%s" % (filingnum)
     cursor.execute(cmd)
     
     # flag this filer as one who has changed. 
-    cmd = "update summary_data_committee_overlay set is_dirty=True where fec_id='%s'" % (filer_id)
+    cmd = "update efilings_committee set is_dirty=True where fec_id='%s' and cycle='%s'" % (filer_id, CURRENT_CYCLE)
     cursor.execute(cmd)
-    """
+    
+    # should also update the candidate is dirty flag too by joining w/ ccl table. 
+    # these tables aren't indexed, so do as two separate queries. 
+    cmd = "select cand_id from ftpdata_candcomlink where cmte_id = '%s' and cmte_dsgn in ('A', 'P')" % (filer_id)
+    cursor.execute(cmd)
+    result = cursor.fetchone()
+    if result:
+        cand_id = result[0]
+        cmd = "update efilings_candidate set is_dirty=True where fec_id = '%s' and cycle='%s'" % (cand_id, CURRENT_CYCLE)
+        cursor.execute(cmd)
 
-
+        
 
 
 """
-t0 = time.time()
-process_filing_body(864353)
-# 869853, 869866
-#for fn in [869888]:
-#    process_filing_body(fn, fp)
-t1 = time.time()
-print "total time = " + str(t1-t0)
-# long one: 767168
-#FAILS WITH STATE ADDRESS PROBLEM:  biggest one on file: 838168 (510 mb) - act blue - 2012-10-18         | 2012-11-26
-# second biggest: 824988 (217.3mb) - act blue - 2012-10-01         | 2012-10-17 - 874K lines
+from parsing.utils.filing_body_processor import process_filing_body
+process_filing_body(1022512)
+
+
+for fn in [838168, 824988, 840327, 821325, 798883, 804867, 827978, 754317]:
+    t0 = time.time()
+    process_filing_body(fn, fp)
+    t1 = time.time()
+    print "total time to process filing %s=%s" ( fn, (t1-t0))
+
+### Large historic filings to test with:
+# 838168 (510 mb) - act blue - 2012-10-18         | 2012-11-26
+# 824988 (217.3mb) - act blue - 2012-10-01         | 2012-10-17 - 874K lines
 # 840327 - 169MB  C00431445 - OFA   | 2012-10-18         | 2012-11-26
 # 821325 - 144 mb Obama for america 2012-09-01         | 2012-09-30
 # 798883 - 141 mb
