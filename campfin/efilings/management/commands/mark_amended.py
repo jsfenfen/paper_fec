@@ -21,7 +21,7 @@ class Command(BaseCommand):
                 
                 try:
                     original = Filing.objects.get(filing_number=new_amended_filing.amends_filing)
-                    print "Writing amended original: %s %s" % (original.filing_number, filing_num)                        
+                    logger.info("Writing amended original: %s %s" % (original.filing_number, filing_num))                        
                     original.is_superceded=True
                     original.amended_by = new_amended_filing.filing_number
                     original.save()
@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 # Now find others that amend the same filing 
                 earlier_amendments = Filing.objects.filter(is_amendment=True,amends_filing=new_amended_filing.amends_filing, filing_number__lt=filing_num)
                 for earlier_amendment in earlier_amendments:
-                    print "** Handling prior amendment: %s %s" % (earlier_amendment.filing_number, header.filing_number)
+                    logger.info("Handling prior amendment: %s %s" % (earlier_amendment.filing_number, new_amended_filing.filing_number))
                     earlier_amendment.is_superceded=True
                     earlier_amendment.amended_by = filing_num
                     earlier_amendment.save()

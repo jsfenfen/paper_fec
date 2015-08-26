@@ -14,14 +14,12 @@ from django.conf import settings
 from efilings.models import Filing
 
 # Add parsing dir to path
-sys.path.append(settings.PARSING_DIR)
-# And parentdir, crap
+sys.path.append(settings.PARSING_BASE_DIR)
 
-sys.path.append(os.path.dirname(settings.PARSING_DIR))
 
-from form_parser import form_parser, ParserMissingError
-from filing import filing
-from read_FEC_settings import FILECACHE_DIRECTORY
+from parsing.form_parser import form_parser, ParserMissingError
+from parsing.filing import filing
+from parsing.read_FEC_settings import FILECACHE_DIRECTORY
 
 
 #from formdata.models import Filing_Header

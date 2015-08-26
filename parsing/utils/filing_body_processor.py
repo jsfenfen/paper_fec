@@ -196,8 +196,8 @@ def process_filing_body(filingnum, fp=None, logger=None):
         cmd = "update efilings_candidate set is_dirty=True where fec_id = '%s' and cycle='%s'" % (cand_id, CURRENT_CYCLE)
         cursor.execute(cmd)
 
-        
-
+    connection.close()
+    
 
 """
 from parsing.utils.filing_body_processor import process_filing_body

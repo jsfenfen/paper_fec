@@ -36,7 +36,7 @@ The approach I've taken is to do both two and three. Hitting the query page is i
 
 The RSS feed contains a substantial amount of information, but just blinding hitting a single URL provides no data. In general I just create a filing object once we know one exists, and populate the data from the header in a subsequent step. 
 
-Relevant scripts: **scrape_rss_filings** hits the rss feed; **find_filings** looks for filings based on the highest available fiiling number. Note that it's possible for find_filings to *miss* filings if they land out of order (this seems to not really happen), so it's important to keep running the rss script, which will catch anything that was missed. You could rely exclusively on the feed, it's just up to 5 minutes out of date. I haven't run find_filings more than once every few minutes, but it should be fine to run once a minute or so. 
+Relevant scripts: **scrape_rss_filings** hits the rss feed; **find_new_filings** looks for filings based on the highest available fiiling number. Note that it's possible for find_filings to *miss* filings if they land out of order (this seems to not really happen), so it's important to keep running the rss script, which will catch anything that was missed. You could rely exclusively on the feed, it's just up to 5 minutes out of date. I haven't run find_filings more than once every few minutes, but it should be fine to run once a minute or so. 
 
 Either script should create the filing object, but set the filing_is_downloaded char to 0.
 
@@ -68,6 +68,9 @@ It's possible to combine these two scripts into one, but it's sometimes useful t
 ### Processing of line itemizations
 
 It's probably useful to queue the line itemization entry process. An example of the line entry is given in examples/read_and_transform_FEC_demo.py. This part of the script should act on filings where data_is_processed is "0" and set it to "1" upon completion. 
+
+
+There's a managementment command called **send_body_row_jobs** that will enter all of the needed itemizations from within django. It's useful for entering archived data, and is slightly more efficient because it doesn't need to create new form parsers for every filing. 
 
 
 

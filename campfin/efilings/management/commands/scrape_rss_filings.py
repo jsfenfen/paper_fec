@@ -18,8 +18,8 @@ from django.conf import settings
 from django.utils import timezone
 
 # put the parsing directory stuff on the path -- needs more sane setup
-sys.path.append(settings.PARSING_DIR)
-from read_FEC_settings import FILECACHE_DIRECTORY, USER_AGENT, FEC_DOWNLOAD, DELAY_TIME, CYCLE
+sys.path.append(settings.PARSING_BASE_DIR)
+from parsing.read_FEC_settings import FILECACHE_DIRECTORY, USER_AGENT, FEC_DOWNLOAD, DELAY_TIME, CYCLE
 
 
 # Get an instance of a logger

@@ -5,16 +5,15 @@ from django.db import connection, transaction
 from django.core.management.base import BaseCommand, CommandError
 
 from efilings.models import Filing
-# from fec_alerts.utils.form_mappers import *
-from utils.cycle_utils import get_cycle_from_date
+
 
 from django.conf import settings
 # Put parsing dir on path
-sys.path.append(settings.PARSING_DIR)
-from read_FEC_settings import FILECACHE_DIRECTORY, USER_AGENT, FEC_DOWNLOAD, DELAY_TIME
-
-from form_parser import form_parser, ParserMissingError
-from filing import filing
+sys.path.append(settings.PARSING_BASE_DIR)
+from parsing.read_FEC_settings import FILECACHE_DIRECTORY, USER_AGENT, FEC_DOWNLOAD, DELAY_TIME
+from parsing.utils.cycle_utils import get_cycle_from_date
+from parsing.form_parser import form_parser, ParserMissingError
+from parsing.filing import filing
 
 logger = logging.getLogger(__name__)
 

@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ### HACK TO PUT THE PARSING STUFF ON THE PATH
-PARSING_DIR = os.path.dirname(BASE_DIR) + '/parsing'
+PARSING_BASE_DIR = os.path.dirname(BASE_DIR) 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
