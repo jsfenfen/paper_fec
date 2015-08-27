@@ -38,13 +38,6 @@ def process_body_row(linedict, filingnum, line_sequence, is_amended, cd, filer_i
     # this will be the arg passed to csv dumper: ('skedletter', datadict)
     result = None
     
-    ## Mark memo-ized rows as being superceded by an amendment.
-    try:
-        if linedict['memo_code']=='X':
-            linedict['superceded_by_amendment'] = True
-    except KeyError:
-        pass
-    
     if form=='SchA':
         result = ['A', skeda_from_skedadict(linedict, filingnum, line_sequence, is_amended)]
 
