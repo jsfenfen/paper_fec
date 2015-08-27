@@ -1,5 +1,12 @@
+import sys
 from django.db import models
 from django.utils import timezone
+
+from django.conf import settings
+# Put parsing dir on path
+sys.path.append(settings.PARSING_BASE_DIR)
+
+from parsing.utils.cycle_utils import get_cycle_from_date
 
 from django_hstore import hstore
 
@@ -179,7 +186,6 @@ class Committee(models.Model):
     total_unitemized = models.DecimalField(max_digits=19, decimal_places=2, null=True)
     cash_on_hand = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Cash on hand as of the end of committee's most recent periodic report; this date appears as cash_on_hand_date")
     cash_on_hand_date = models.DateField(null=True, help_text="The end of the most recent periodic filing; the date that the cash on hand was reported as of.")
-    committee_sum_update_time = models.DateTimeField(null=True, help_text="When were totals from FEC about candidate last updated")
     committee_sum_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
     ###### END COMMITTEE SUMS
 
@@ -294,7 +300,16 @@ class Filing(models.Model):
     
     objects = hstore.HStoreManager()
     
-    
+    # cycle should be set initially for form types that permit it--this should only be used for form types whose coverage_from_date has to be set from the body row lines.
+    def set_cycle(self, save_now=True):
+        if self.coverage_from_date:
+            self.cycle = get_cycle_from_date(self.coverage_from_date)
+            if save_now:
+                self.save()
+        elif self.filed_date:
+            self.cycle = get_cycle_from_date(self.filed_date)
+            if save_now:
+                self.save()
 
 # field sizes are based on v8.0 specs, generally
 class SkedA(models.Model):

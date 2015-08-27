@@ -22,7 +22,7 @@ class Command(BaseCommand):
                 try:
                     original = Filing.objects.get(filing_number=new_amended_filing.amends_filing)
                     logger.info("Writing amended original: %s %s" % (original.filing_number, filing_num))                        
-                    original.is_superceded=True
+                    original.superseded_by_amendment=True
                     original.amended_by = new_amended_filing.filing_number
                     original.save()
                         
@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 earlier_amendments = Filing.objects.filter(is_amendment=True,amends_filing=new_amended_filing.amends_filing, filing_number__lt=filing_num)
                 for earlier_amendment in earlier_amendments:
                     logger.info("Handling prior amendment: %s %s" % (earlier_amendment.filing_number, new_amended_filing.filing_number))
-                    earlier_amendment.is_superceded=True
+                    earlier_amendment.superseded_by_amendment=True
                     earlier_amendment.amended_by = filing_num
                     earlier_amendment.save()
 

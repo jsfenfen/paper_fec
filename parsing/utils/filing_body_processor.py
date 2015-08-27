@@ -45,7 +45,6 @@ def process_body_row(linedict, filingnum, line_sequence, is_amended, cd, filer_i
     except KeyError:
         pass
     
-    #print "processing form type: %s" % (form)
     if form=='SchA':
         result = ['A', skeda_from_skedadict(linedict, filingnum, line_sequence, is_amended)]
 
@@ -85,9 +84,7 @@ def process_body_row(linedict, filingnum, line_sequence, is_amended, cd, filer_i
     else:
         result = ['O', otherline_from_line(linedict, filingnum, line_sequence, is_amended, filer_id)]
     
-    # write it to the db using csv to db (which will only actually write every 1,000 rows)
-    
-    print "Result of process_body_row is: %s" % (result)
+    # write it to the db using csv to db (which will only actually write every 1,000 rows)    
     cd.writerow(result[0], result[1])
 
 def process_filing_body(filingnum, fp=None, logger=None):

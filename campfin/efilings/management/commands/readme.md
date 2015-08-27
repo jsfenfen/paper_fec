@@ -15,8 +15,12 @@ There are several different loading processes that must be run to keep things cu
 
 * Daily updates: Set candidate, committee and candidate committee linkage files from the FEC's master files, which are updated daily. Data copied directly from the FEC's files lives in FTPData, and is wiped and rewritten onload. Copy the data from this app to the campfin app so that hand-edited changes remain. 
 
+## Bulk loading vs realtime operation
+
+The same breakdown of processing tasks can be used to load filings in real time, or in bulk, with a few crucial differences. Loading historic data relies on it being downloaded from the FEC's daily zipfiles (as opposed to file-by-file), and the filing numbers must be entered into the database as if they were retrieved file-by-file. See more below. 
 
 
+##Processing steps
 
 ### Quick .fec file ingestion
 
@@ -76,16 +80,22 @@ There's a managementment command called **send_body_row_jobs** that will enter a
 
 ### Set values after line itemization is complete
 
-**mark_superceded_body_rows** mark the line item lines superceded
+**mark_superseded_body_rows** Marks the body rows that are superseded by certain filings, and set totals on filings 
+that can only be computed after all body rows are entered. 
 
-**update_dirty_committees** reaggregate core committee totals (not IE's)
+Specifically, summarizes F24, F5 and F6 and marks as superseded F24, F57 and F65. 
 
-**update_dirty_candidates** reaggregate core candidate totals (not IE's)
+Acts on Filing objects with: previous_amendments_processed="1", header_is_processed="1", 
+data_is_processed="1", body_rows_superseded="0" and sets body_rows_superseded to "1" on 
+completion.
 
 
-**process_skede_lines** --> not implemented here
+**update_dirty_committees** Set the basic sums for committees. Sets the committee_sum_update_time on each committee. This can also be run on all committees (after doing a bulk load) with **update_all_committees**
 
---> supersede F5 non-quarterly w/ quarterly.
---> supercede F6 w/ F3[X]
---> supercede F24 w/ F3[X]
+
+**update_dirty_candidates** Not implemented. Should be trivial, but need to hit candcomlink table in FTPData first. 
+
+**process_skede_lines** One of the significant challenges is that independent expenditures (made by outside groups) to support or oppose candidates often leave off the candidate ID, or get it wrong, or mix up a variety of information. Fixing this is not part of this process. For a fuzzy matching approach, see [here](https://github.com/sunlightlabs/read_FEC/tree/master/fecreader/reconciliation). 
+
+
 
