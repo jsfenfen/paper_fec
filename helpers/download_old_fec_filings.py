@@ -12,7 +12,7 @@ from time import sleep
 from urllib2 import URLError
 
 from parsing.read_FEC_settings import FEC_FILE_LOCATION, USER_AGENT, ZIP_DIRECTORY, FILECACHE_DIRECTORY, DELAY_TIME
-from parsing.utils import download_with_headers
+from parsing.utils.parsing_utils import download_with_headers
 
 # Note that 2011/12/04, 2012/07/01, 2012/12/15, 2012/12/25 do not exist; presumably no filings were received on these days.
 

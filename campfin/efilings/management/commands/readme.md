@@ -97,5 +97,71 @@ completion.
 
 **process_skede_lines** One of the significant challenges is that independent expenditures (made by outside groups) to support or oppose candidates often leave off the candidate ID, or get it wrong, or mix up a variety of information. Fixing this is not part of this process. For a fuzzy matching approach, see [here](https://github.com/sunlightlabs/read_FEC/tree/master/fecreader/reconciliation). 
 
+## Importing an entire cycle at once
+
+The process of importing an entire cycle's worth of data is similar to uploading the most recent filings, although there are a few differences. 
+
+First add the candidate, committee and candcomlink files to the ftpdata app as detailed [here](https://github.com/jsfenfen/paper_fec/tree/master/campfin/ftpdata).
+
+Next import an entire cycle of filings. From the paper_fec directory run:
+
+```
+python -m helpers.download_old_fec_filings
+```
+With no arguments this will attempt do download and unzip every filing received this cycle (through yesterday). 
+
+From the campfin directory run the command make_files_from_archive, i.e., 
+
+```
+python manage.py make_files_from_archive
+```
+
+Then run these commands, in order, waiting for each one to finish before running the next:
+
+- enter_headers_from_new_filings
+- set_new_filing_details
+- mark_amended
+- send_body_row_jobs (This may take a while)
+- mark_superseded_body_rows
+- update_all_committee_times
+
+## Regular operation once the archive has been imported
+
+Cron 1: get filings from the FEC's rss feed, updated every 5 minutes (so run it about every 5 minutes)
+
+- scrape_rss_filings
+- download_new_filings
+- enter_headers_from_new_filings
+- set_new_filing_details
+- mark_amended
+- [ if queued: send_body_row_jobs ]
+
+Cron 2: Find filings, whether or not they are on the feed. Could run this every minute or so--though skip the minute when the rss feed is being hit. 
+
+- find_new_filings
+- download_new_filings
+- enter_headers_from_new_filings
+- set_new_filing_details
+- mark_amended
+- [ if queued: send_body_row_jobs ]
+
+The send_body_row_jobs command is intended to not actually enter the line itemizations (aka the body rows) but just queue them for another process to handle. This is by far the most time consuming step, so trying to run via cron can be a problem. 
+
+Cron 3: Process data that assumes line itemizations are complete. Every 5 minutes or so? 
+
+- mark_superseded_body_rows
+- update_dirty_committee_times
+
+Note that in this version, it's only the 'dirty' committees that are updated. 
 
 
+
+
+
+
+
+
+
+
+
+ 

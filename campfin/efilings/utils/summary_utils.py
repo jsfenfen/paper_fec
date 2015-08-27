@@ -18,6 +18,9 @@ logger = logging.getLogger(__name__)
 one_day = timedelta(days=1)
 
 
+
+## todo: move top two functions to utils somewhere 
+
 def validate_decimal(value):
     
     if not value:
@@ -27,10 +30,20 @@ def validate_decimal(value):
         try:
             return float(value)
         except ValueError:
-            print "Error converting contribution amount %s" % (value)
-            return None
+            logger.error("Error converting contribution amount '%s' from decimal to float" % (value)
+            return 0
             
 
+def string_to_float(the_string):
+    # Return zero if it's a blank space
+    if not the_string:
+        return 0
+    s = the_string.rstrip()
+    if s:
+        return float(s)
+    else:
+        return 0
+                    
 def warn_about_gap(gap_start, gap_end, committee):
     logger.warn("Gap in summary data coverage for %s %s -- gap start = %s and gap end = %s" % (committee.name, committee.fec_id, gap_start, gap_end))
 
@@ -96,15 +109,6 @@ def map_f3p_to_cts(this_dict):
     }
     return cts_dict
 
-def string_to_float(the_string):
-    # Return zero if it's a blank space
-    if not the_string:
-        return 0
-    s = the_string.rstrip()
-    if s:
-        return float(s)
-    else:
-        return 0
 
 def map_summary_form_to_dict(form, header_data, Filing):
     if form in ['F3', 'F3A', 'F3T', 'F3N']:
@@ -135,11 +139,13 @@ def get_recent_reports(fec_id, coverage_from_date):
         if not summary_data[i]:
             summary_data[i] = 0
 
-    print "Summary data of recents reports is: " + str(summary_data)
     return summary_data
 
 def summarize_noncommittee_periodic_electronic(committee, cycle):
-    return None
+    """ Not implemented. This should probably just use non-quarterly reports, but it's a tossup."""
+    this_cycle_calendar = cycle_calendar[int(cycle)]
+    this_cycle_start = this_cycle_calendar['start']
+    this_cycle_end = this_cycle_calendar['end']
 
      
 def summarize_committee_periodic_electronic(committee, cycle):
@@ -148,9 +154,7 @@ def summarize_committee_periodic_electronic(committee, cycle):
     this_cycle_end = this_cycle_calendar['end']
     
     relevant_filings = Filing.objects.filter(fec_id=committee.fec_id, superseded_by_amendment=False, coverage_from_date__gte=this_cycle_start, coverage_to_date__lte=this_cycle_end, form_type__in=['F3P', 'F3PN', 'F3PA', 'F3PT', 'F3', 'F3A', 'F3N', 'F3T', 'F3X', 'F3XA', 'F3XN', 'F3XT']).order_by('coverage_to_date')
-    #print "processing %s" % committee_id
     if not relevant_filings:
-        #print "No filings found for %s" % (committee_id)
         return None
     
     
@@ -161,7 +165,6 @@ def summarize_committee_periodic_electronic(committee, cycle):
     # Put each time summary into the below. 
     cts_array = []
     for i, this_filing in enumerate(relevant_filings):
-        #print i, this_filing.coverage_from_date, this_filing.coverage_through_date
         if i==0:
 
             if this_filing.coverage_from_date - this_cycle_start > one_day:
@@ -176,11 +179,7 @@ def summarize_committee_periodic_electronic(committee, cycle):
             if this_filing.coverage_from_date == previous_start and this_filing.coverage_to_date == previous_end:
                 msg = "Duplicate unamended filing found for %s %s : %s-%s" % (committee.name, committee.fec_id, this_filing.coverage_from_date, this_filing.coverage_to_date)
                 logger.error(msg)
-                assert False
-            
-            
-        #print "Got filing %s - %s" % (this_filing.coverage_from_date, this_filing.coverage_through_date)
-        
+                    
         previous_start = this_filing.coverage_from_date
         previous_end = this_filing.coverage_to_date
         
@@ -193,7 +192,6 @@ def summarize_committee_periodic_electronic(committee, cycle):
             if cts_dict[i] == '':
                 cts_dict[i] = None
         cts_array.append(cts_dict)
-        print cts_dict
     
     # we have each filing period represented in the cts_array.
     # so sum them. 
