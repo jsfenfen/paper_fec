@@ -13,7 +13,40 @@ There are several different loading processes that must be run to keep things cu
 * Periodic committee and candidate aggregation: Periodically recalculate the total raised and spent by candidates and committees. Candidate totals are based only on authorized committees listed as such in the candidate-committee linkage file; leadership accounts are not included.
 
 
-* Daily updates: Set candidate, committee and candidate committee linkage files from the FEC's master files, which are updated daily. Data copied directly from the FEC's files lives in FTPData, and is wiped and rewritten onload. Copy the data from this app to the campfin app so that hand-edited changes remain. 
+* Daily updates: Set candidate, committee and candidate committee linkage files from the FEC's master files, which are updated daily. Data copied directly from the FEC's files lives in FTPData, and is wiped and rewritten onload. Copy the data from this app to the campfin app so that hand-edited changes remain.
+
+## Schedule transformations
+
+The FEC uses slightly different forms to report what are essentially the same transactions. For example, independent expenditures by a corporation are disclosed on a different form than independent expenditures by a party PAC, even though, in the eyes of the law, and the information required, they are basically the same thing. This repo deals with this by intelligently transforming the schedule used in the manner described by [The Sunlight Foundation here](http://realtime.influenceexplorer.com/about/)  (see the "schedule transformation" section). 
+
+Transformed schedules are noticeable in the database because the original linetype is preserved. So an independent expenditure made by a corporation would be reported on a form 5 in a F57 line, but would be reported by this repo in a schedule E line where the "linetype" field is given as "F57".
+
+
+## Amendments
+
+One important challenge is how to handle amended electronic filings (there is currently no good way no handle amended paper filings). 
+
+Campaign finance rules allow PACs to file an "amended" version of an earlier filing *at any time*. This essentially means that the committees can revise claims they made, years ago, whenever they want. 
+
+Electronic filings make amendments fairly straightforward. For one, the amended version of the original filing must *entirely replace* the initial filing. In this case, the "superseded_by_amendment" flag is set to true on the superseded filing object, and the "amended_by" field is set to the filing number of the filing that replaces it. 
+
+One important wrinkle is slight variations in how the sequence of filings is reported. Imagine a committee files filing 100, and then amends it twice, first in filing 200, and then in filing 300. 
+
+Clearly filing 200 should say that it is amending filing 100, but should filing 300 say that it is amending filing 100 or 200? In the wild, both situations are encountered, so it's important to look for that. Moreover, it's not uncommon for important filings to be amended 3 or 4 times; typically the *biggest* filings need the most amendments, because there are so many details that might need correcting. 
+
+Besides amendments, FEC requires that some contributions and expenses be reported twice: first on a form that's due in 24- or 48- hours, and then again in a committees regular periodic filing (which is generally monthly or quarterly). 
+
+Historically the FEC has required quicker disclosure of larger itemizations toward the end of a campaign, but doesn't hold them to the same standard of accuracy; its common for ad buys to be refunded substantially after the fact due to preempted ads, etc. Therefore, the FEC has not historically included the 24- and 48- hour notices in it's summations of committee activity. 
+
+That's understandable--but probably not desirable in a reporting context. So summation processes in this repo *do* count these quick turnaround forms in sums, when applicable, though often they are represented separately to reflect different filing requirements. 
+
+For example, during the final 20 days of an election, a candidate pac must report all contributions of $1,000 or more within 48 hours. Note how fundamentally poorly-though out this is; to circumvent this particular disclosure, one could simply write two checks for $500. And yet, even though FEC has records of these reports (albeit on paper for senate candidates), they aren't counted towards the contribution totals. 
+
+This repo treats 24 hour notice forms as being amended when the periodic filing is received. There's one crucial difference though: instead of marking the *filing* as being superseded, each line item is marked as being superceded. (The same is true for 48-hour notice contributions). That's because there's no guarantee that the timerange covered by a 24- or 48-hour form will be entirely covered by a single periodic report. For instance, a single report of independent expenditures might cover the last day of one month and the first of another. A monthly filer would then report some of those transactions on two different months' reports. After the first months report was filed (but before the second) a correct summation requires that only some of the expenditures be counted *in addition to* the amounts disclosed on the monthly filings. 
+
+The general rule for line itemizations is to not count them towards totals if **either**  the filng they appear on, or the itemization itself is marked as superseded by an amendment.
+ 
+
 
 ## Bulk loading vs realtime operation
 
@@ -67,7 +100,9 @@ The next script is **set_new_filing_details** which sets the basic summary infor
 
 It's possible to combine these two scripts into one, but it's sometimes useful to track when form parsing breaks as opposed to when the business logic of attaching parsed form values to a few summary points is borked. 
 
+
 **mark_amended** finds previous filings that are superceded by new filings and marks them as amended. It also looks for other, earlier filings that amend the same filing (as the new filing amends)--which is how these things sometimes are reported. It runs on filings where previous_amendments_processed="0" and new_filing_details_set="1"; it sets previous_amendments_processed to "1" when it's done. Note that this doesn't mark the line items attached to each filing as having been amended--that takes place in a subsequent script. 
+
 
 ### Processing of line itemizations
 
