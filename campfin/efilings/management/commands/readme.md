@@ -136,7 +136,7 @@ completion.
 
 The process of importing an entire cycle's worth of data is similar to uploading the most recent filings, although there are a few differences. 
 
-First add the candidate, committee and candcomlink files to the ftpdata app as detailed [here](https://github.com/jsfenfen/paper_fec/tree/master/campfin/ftpdata).
+First download and import the candidate, committee and candcomlink files to the ftpdata app as detailed [here](https://github.com/jsfenfen/paper_fec/tree/master/campfin/ftpdata).
 
 Next import an entire cycle of filings. From the paper_fec directory run:
 
@@ -153,14 +153,17 @@ python manage.py make_files_from_archive
 
 Then run these commands, in order, waiting for each one to finish before running the next:
 
+- download_new_filings (this checks whether the file is available for downloading, and after finding it, will just mark it as having been downloaded)
 - enter_headers_from_new_filings
 - set_new_filing_details
 - mark_amended
 - send_body_row_jobs (This may take a while)
 - mark_superseded_body_rows
-- update_all_committee_times
+- update_all_committees
 
 ## Regular operation once the archive has been imported
+
+Daily cron: The candidate, committee and candidate-committee linkage files should downloaded and imported daily to keep these files up-to-date (see link above). As currently written, these simply add new files--this approach will miss changes to committee details, like name changes. 
 
 Cron 1: get filings from the FEC's rss feed, updated every 5 minutes (so run it about every 5 minutes)
 

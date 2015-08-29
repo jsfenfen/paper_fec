@@ -2,7 +2,7 @@ from datetime import date
 
 from django.core.management.base import BaseCommand, CommandError
 
-from efilings.utils.summary_utils import update_committee_times
+from efilings.utils.summary_utils import update_committee_totals
 from efilings.models import Committee
 from django.conf import settings
 

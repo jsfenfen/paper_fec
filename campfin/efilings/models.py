@@ -179,11 +179,12 @@ class Committee(models.Model):
     ####### COMMITTEE SUMS
     # total receipts
     total_receipts = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Total receipts for this committee ceived during the entire cycle. ")
-    total_contributions = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     total_disbursements = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Total disbursements by this committee ceived during the entire cycle")
     outstanding_loans = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True, default=0, help_text="Total outstanding loans as of the cash_on_hand_date")
-    # total unitemized receipts
-    total_unitemized = models.DecimalField(max_digits=19, decimal_places=2, null=True)
+    total_contributions = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
+    total_unitemized_indiv = models.DecimalField(max_digits=19, decimal_places=2, null=True)
+    total_itemized_indiv = models.DecimalField(max_digits=19, decimal_places=2, null=True)
+    tot_coo_exp_par = models.DecimalField(max_digits=19, decimal_places=2, null=True)
     cash_on_hand = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Cash on hand as of the end of committee's most recent periodic report; this date appears as cash_on_hand_date")
     cash_on_hand_date = models.DateField(null=True, help_text="The end of the most recent periodic filing; the date that the cash on hand was reported as of.")
     committee_sum_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
@@ -258,21 +259,18 @@ class Filing(models.Model):
     coh_end = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The cash on hand at the end of the reporting period. ")
     # Did they borrow *new* money this period ? 
     new_loans = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The amount of new loans taken on by the committee during this reporting period.")
+    outstanding_loans = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="Debts and Obligations Owed BY the Committee")
     # if applicable:
     tot_raised = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount raised in this report. This is total receipts for periodic reports.")
+    tot_contribs = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="Total contributions, if reported (includes individuals, pacs, etc.)")
+    tot_ite_contribs_indivs = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="Total itemized contributions from individuals if reported (individuals includes corporations, unions)")
+    tot_non_ite_contribs_indivs = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="Total unitemized contributions from individuals, if reported (individuals includes corporations, unions)")
     tot_spent = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount spent in this report.")
+    tot_ies = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures made")
+    tot_coordinated = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="Total amount of coordinated expenditures made (really only applies to party PACs.)")
     
-    tot_ies = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0, help_text="The total amount of independent expenditures ")
-    tot_coordinated = models.DecimalField(max_digits=14, decimal_places=2, null=True, default=0)
     
-    #### SWITCHING THIS STUFF BACK TO HSTORE TOO
-    # Useful to track this stuff generally... 
-    # skeda_linecount = models.IntegerField(null=True, blank=True)
-    # skedb_linecount = models.IntegerField(null=True, blank=True)
-    # skedc_linecount = models.IntegerField(null=True, blank=True) # not really supported yet
-    # skedd_linecount = models.IntegerField(null=True, blank=True) # ditto
-    # skede_linecount = models.IntegerField(null=True, blank=True)
-    # skedo_linecount = models.IntegerField(null=True, blank=True) # a count of 'other' lines. 
+    # how many itemization lines are there? 
     lines_present = hstore.SerializedDictionaryField(null=True, help_text="How many itemization lines are present of which type")
     
     
