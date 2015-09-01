@@ -4,11 +4,12 @@ from datetime import timedelta,date
 
 
 from django.utils import timezone
-from django.db.models import Sum
+from django.db.models import Sum, Max
 from django.conf import settings
 
 
 from efilings.models import Filing, Committee
+from ftpdata.models import CandComLink
 
 sys.path.append(settings.PARSING_BASE_DIR)
 from parsing.utils.cycle_utils import cycle_calendar
@@ -134,7 +135,7 @@ def sum_from_filings(relevant_filings, cycle, committee):
     committee.total_independent_expenditures = (summary_data['total_independent_expenditures'] or 0 ) + validate_decimal(recent_summary['total_indy_expenditures'])
 
     committee.committee_sum_update_time = timezone.now()
-
+    committee.is_dirty=False
     committee.save()
 
 
@@ -166,5 +167,44 @@ def update_committee_totals(committee, cycle):
             summarize_noncommittee_periodic_electronic(committee, cycle)                    
         else:
             summarize_committee_periodic_electronic(committee, cycle)
+
+def update_candidate_totals(candidate, cycle):
+    """
+    Update the totals for a candidate based on their authorized and primary campaign committee (PCC) committees.
+    Might want to switch to *only* the PCC, but...
     
+    This doesn't include leadership PACs, or super PACs; those are probably more important, but they 
+    are outside the scope of straight FEC data... 
+    
+    If the leadership_pac_candidate field is set on committees this would be possible... 
+    
+    
+    """
+    
+    linked_committees = CandComLink.objects.filter(cand_id=candidate.fec_id, cycle=cycle, cmte_dsgn__in=['A', 'P'])
+    related_fec_ids = [c.cmte_id for c in linked_committees]
+    related_committees = Committee.objects.filter(cycle=cycle, fec_id__in=related_fec_ids)
+    summary_data  = related_committees.aggregate(total_receipts=Sum('total_receipts'),total_disbursements=Sum('total_disbursements'),total_contributions=Sum('total_contributions'),total_unitemized_indiv=Sum('total_unitemized_indiv'),total_itemized_indiv=Sum('total_itemized_indiv'), outstanding_loans=Sum('outstanding_loans'), cash_on_hand=Sum('cash_on_hand'), cash_on_hand_date=Max('cash_on_hand_date'))
+    
+    # the keys are the same! could assign 
+    candidate.total_receipts = summary_data['total_receipts'] or 0
+    candidate.total_contributions = summary_data['total_contributions'] or 0
+    candidate.total_disbursements = summary_data['total_disbursements'] or 0 
+    candidate.total_unitemized_indiv = summary_data['total_unitemized_indiv'] or 0
+    candidate.total_itemized_indiv = summary_data['total_itemized_indiv'] or 0
+    candidate.outstanding_loans = summary_data['outstanding_loans']
+    candidate.cash_on_hand = summary_data['cash_on_hand']
+    candidate.cash_on_hand_date = summary_data['cash_on_hand_date']
+     
+    candidate.candidate_total_update_time = timezone.now()
+    candidate.is_dirty=False
+    candidate.save()
+
+"""
+from efilings.utils.summary_utils import update_candidate_totals
+from efilings.models import Candidate
+c = Candidate.objects.get(cycle='2016', fec_id='H0CA27085')
+update_candidate_totals(c, '2016')
+
+"""
     

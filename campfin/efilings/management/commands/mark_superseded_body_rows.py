@@ -1,3 +1,5 @@
+##### NEED TO SET FILING CYCLE HERE !
+
 """
 Marks the body rows that are superseded by certain filings, and set totals on filings 
 that can only be computed after all body rows are entered. 
@@ -11,18 +13,48 @@ completion.
 """
 
 
-import logging
+import logging, sys
 
 from dateutil.parser import parse as dateparse
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Sum, Max, Min
+from django.conf import settings
 
 
-from efilings.models import SkedA, SkedE, Filing
+from efilings.models import SkedA, SkedE, Filing, Committee, Candidate
+from ftpdata.models import CandComLink
+
+sys.path.append(settings.PARSING_BASE_DIR)
+
+from parsing.utils.cycle_utils import get_cycle_from_date
 
 
-# for debugging
-#from django.db import connection
+def set_is_dirty(fec_id, cycle):
+    co = None
+    try:
+        co = Committee.objects.get(fec_id=fec_id, cycle=cycle)
+    except Committee.DoesNotExist:
+        return None
+        
+    # mark that the committee totals are dirty
+    co.is_dirty=True
+    co.save()
+    
+    # Also mark the candidate totals as dirty too
+    if co.designation in ['A', 'P']:
+        ccl=None
+        try:
+            ccl = CandComLink.objects.get(cycle=cycle, cmte_id=fec_id)
+        except CandComLink.DoesNotExist:
+            pass
+        if ccl:
+            try:
+                candidate = Candidate.objects.get(cycle=cycle, fec_id=ccl.cand_id)
+                candidate.is_dirty = True
+                candidate.save()
+            except Candidate.DoesNotExist:
+                pass
+    
 
 # superseded operations are slow bc of query structure -- need to hit indexes here
 def mark_superseded_F24s(new_f3x_new_filing):
@@ -73,6 +105,7 @@ def mark_superseded_F57s(new_monthly_f5):
         
     
 def summarize_f24(new_filing):
+    ## needs is_dirty 
     filing_ies = SkedE.objects.filter(filing_number=new_filing.filing_number)
     
     results = filing_ies.aggregate(tot_spent=Sum('expenditure_amount'), start_date=Min('expenditure_date_formatted'), end_date=Max('expenditure_date_formatted'))
@@ -81,9 +114,14 @@ def summarize_f24(new_filing):
         new_filing.tot_ies = results['tot_spent']
         new_filing.coverage_from_date = results['start_date']
         new_filing.coverage_to_date = results['end_date']
+        new_filing.cycle = get_cycle_from_date(results['end_date'])
+        
         new_filing.save()
+        
+        set_is_dirty(new_filing.filing_number, new_filing.cycle)
     
 def summarize_f6(new_filing):
+    # needs is_dirty
     filing_skeda = SkedA.objects.filter(filing_number=new_filing.filing_number)
 
     results = filing_skeda.aggregate(tot_raised=Sum('contribution_amount'), start_date=Min('contribution_date_formatted'), end_date=Max('contribution_date_formatted'))
@@ -91,15 +129,26 @@ def summarize_f6(new_filing):
         new_filing.tot_raised = results['tot_raised']
         new_filing.coverage_from_date = results['start_date']
         new_filing.coverage_to_date = results['end_date']
+        new_filing.coverage_to_date = results['end_date']
+        new_filing.cycle = get_cycle_from_date(results['end_date'])
         new_filing.save()
+        
+        set_is_dirty(new_filing.filing_number, new_filing.cycle)
+        
     
 def summarize_nonquarterly_f5(new_filing):
+    # needs is_dirty
     filing_ies = SkedE.objects.filter(filing_number=new_filing.filing_number)
     
     results = filing_ies.aggregate(start_date=Min('expenditure_date_formatted'), end_date=Max('expenditure_date_formatted'))
     new_filing.coverage_from_date = results['start_date']
     new_filing.coverage_to_date = results['end_date']
+    new_filing.coverage_to_date = results['end_date']
+    new_filing.cycle = get_cycle_from_date(results['end_date'])
+    
     new_filing.save()
+    
+    set_is_dirty(new_filing.filing_number, new_filing.cycle)
     
 
 class Command(BaseCommand):

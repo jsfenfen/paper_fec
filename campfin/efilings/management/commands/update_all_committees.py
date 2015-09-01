@@ -20,7 +20,6 @@ class Command(BaseCommand):
         all_committees = Committee.objects.filter(cycle=CURRENT_CYCLE)
         for committee in all_committees:
             update_committee_totals(committee, CURRENT_CYCLE)
-            committee.is_dirty=False
-            committee.save()
+
 
 

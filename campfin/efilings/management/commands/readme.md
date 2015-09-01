@@ -160,6 +160,7 @@ Then run these commands, in order, waiting for each one to finish before running
 - send_body_row_jobs (This may take a while)
 - mark_superseded_body_rows
 - update_all_committees
+- update_all_candidates
 
 ## Regular operation once the archive has been imported
 
@@ -188,9 +189,10 @@ The send_body_row_jobs command is intended to not actually enter the line itemiz
 Cron 3: Process data that assumes line itemizations are complete. Every 5 minutes or so? 
 
 - mark_superseded_body_rows
-- update_dirty_committee_times
+- update_dirty_committees
+- update_dirty_candidates
 
-Note that in this version, it's only the 'dirty' committees that are updated. 
+Note that in this version, it's only the 'dirty' committees and candidates that are updated. The dirty flag is set when new filings are added to a committee or candidate. This part hasn't been tested much. 
 
 
 

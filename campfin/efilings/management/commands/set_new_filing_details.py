@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 from efilings.models import Filing
-from ftpdata.models import Committee as FTP_Committee
+from ftpdata.models import Committee as FTP_Committee, CandComLink
 from efilings.models import Committee
 
 try:
@@ -127,6 +127,7 @@ def process_f13_header(header_data):
 
 def handle_filing(this_filing):
     
+    ## Could the filing.cycle be wrong? Some 
     try:
         co = Committee.objects.get(fec_id=this_filing.fec_id, cycle=this_filing.cycle)
         this_filing.committee_designation = co.designation
@@ -135,9 +136,28 @@ def handle_filing(this_filing):
         this_filing.committee_slug = co.slug
         #this_filing.party = co.party
         
-        # mark that the committee is dirty
+        # mark that the committee totals are dirty
         co.is_dirty=True
         co.save()
+        
+        # could import from mark_superceded_body_rows, I think. 
+        # Also mark the candidate totals as dirty too
+        if co.designation in ['A', 'P']:
+            ccl=None
+            try:
+                ccl = CandComLink.objects.get(cycle=this_filing.cycle, cmte_id=this_filing.fec_id)
+            except CandComLink.DoesNotExist
+                pass
+            if ccl:
+                try:
+                    candidate = Candidate.objects.get(cycle=this_filing.cycle, fec_id=ccl.cand_id)
+                    candidate.is_dirty = True
+                    candidate.save()
+                except Candidate.DoesNotExist:
+                    pass
+            
+                
+            
         
     except Committee.DoesNotExist:
         try:

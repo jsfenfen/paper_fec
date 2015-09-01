@@ -75,7 +75,8 @@ class Candidate(models.Model):
     total_disbursements = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     outstanding_loans = models.DecimalField(max_digits=19, decimal_places=2, null=True, blank=True, default=0)
     # total unitemized receipts
-    total_unitemized = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
+    total_unitemized_indiv = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="Unitemized contributions from individuals")
+    total_itemized_indiv = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0, help_text="itemized contributions from individuals")
     cash_on_hand = models.DecimalField(max_digits=19, decimal_places=2, null=True, default=0)
     as_of_date = models.DateField(null=True, help_text="When are the totals as of? This is slightly dicey because it's theoretically possible that there could be different filing deadlines, but in practice this almost never happens.")
     candidate_total_update_time = models.DateTimeField(null=True, blank=True, help_text="When were candidate totals last updated?")
@@ -189,6 +190,12 @@ class Committee(models.Model):
     cash_on_hand_date = models.DateField(null=True, help_text="The end of the most recent periodic filing; the date that the cash on hand was reported as of.")
     committee_sum_update_time = models.DateTimeField(null=True, help_text="When was data sourced from FEC about candidate last updated")
     ###### END COMMITTEE SUMS
+    
+    ###### DO WE HAVE TWO FILINGS FOR THE SAME TIME PERIOD? OR A GAP? THIS WILL MESS UP AGGREGATION. 
+    ###### GAPS OFTEN HAPPEN AT THE START OF CYCLE (B/C NEW FILER) BUT DUPES ARE MORE SERIOUS. 
+    filing_aggregation_issue = models.CharField(max_length=15, default="0", help_text="D for duplicate, S for gap at start of cycle; G for gap not beginning at start of cycle; if there are multiple issues, just add the letters.")
+    filing_issue_message = models.TextField(null=True, default=True, help_text="Put the error message here")    
+    
 
     ##### IE SUMS 
     has_independent_expenditures = models.NullBooleanField(null=True, default=False)

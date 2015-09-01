@@ -2,8 +2,8 @@ from datetime import date
 
 from django.core.management.base import BaseCommand, CommandError
 
-from efilings.utils.summary_utils import update_committee_times
-from efilings.models import Committee
+from efilings.utils.summary_utils import update_candidate_totals
+from efilings.models import Candidate
 from django.conf import settings
 
 try:
@@ -13,12 +13,12 @@ except:
     CURRENT_CYCLE = '2016'
     
 class Command(BaseCommand):
-    help = "Redo the summaries of committees marked as dirty not just those that need it"
+    help = "Redo the summaries of all candidates, whether or not they are marked as dirty"
     requires_model_validation = False
     
     def handle(self, *args, **options):
-        all_committees = Committee.objects.filter(is_dirty=True, cycle=CURRENT_CYCLE)
-        for committee in all_committees:
-            update_committee_totals(committee, CURRENT_CYCLE)
+        all_candidates = Candidate.objects.filter(cycle=CURRENT_CYCLE, is_dirty=True)
+        for candidate in all_candidates:
+            update_candidate_totals(candidate, CURRENT_CYCLE)
 
 

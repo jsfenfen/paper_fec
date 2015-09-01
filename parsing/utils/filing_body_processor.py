@@ -172,9 +172,6 @@ def process_filing_body(filingnum, fp=None, logger=None):
     cmd = "update efilings_filing set data_is_processed='1' where filing_number=%s" % (filingnum)
     cursor.execute(cmd)
     
-    # flag this filer as one who has changed. 
-    cmd = "update efilings_committee set is_dirty=True where fec_id='%s' and cycle='%s'" % (filer_id, CURRENT_CYCLE)
-    cursor.execute(cmd)
     
     # should also update the candidate is dirty flag too by joining w/ ccl table. 
     # these tables aren't indexed, so do as two separate queries. 
